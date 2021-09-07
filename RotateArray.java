@@ -2,9 +2,15 @@
 class Solution {
     public void rotate(int[] nums, int k) {
         k = k % nums.length;
-        int[] copyArray = Arrays.copyOf(nums, nums.length);
-        for (int i = 0; i < nums.length; i ++){
-            nums[i] = copyArray[i - k >= 0 ? i - k : nums.length + (i - k)];
+        for (int i = 0; i < k; i ++) {
+            int tempCur = nums[0];
+            int last = nums[nums.length - 1];
+            for (int j = 1; j < nums.length; j ++) {
+                int temp = nums[j];
+                nums[j] = tempCur;
+                tempCur = temp;
+            }
+            nums[0] = last;
         }
     }
 }
