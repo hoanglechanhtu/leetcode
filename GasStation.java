@@ -1,23 +1,28 @@
 class Solution {
     public int canCompleteCircuit(int[] gas, int[] cost) {
-        for (int i = 0; i < gas.length; i ++) {
-            if (backtrack(i, gas, cost)) return i;
+        //If u start at i, and get failure a j, then for every k that i < k < j, k will be fail at j too.
+        int start = 0;
+        int index = 0;
+        int nCheck = 0;
+
+        boolean isStop = false;
+        while(nCheck < gas.length) {
+            start = index; 
+            int curGas = 0;
+            while(curGas >= 0) {
+                nCheck ++; 
+                curGas += gas[index]; 
+                curGas -= cost[index]; 
+                index ++; 
+                if (index == gas.length) index = 0; 
+                if (curGas >= 0 && index == start) return start;
+            }
+                    
+            
         }
+        
         return -1;
     }
     
-    boolean backtrack(int start, int[] gas, int[] cost) {
-        int index = start;
-        int curGas = gas[index];
-        
-        while(curGas >= cost[index]) {
-            curGas -= cost[index];
-            index ++;
-            if (index == gas.length) index = 0;
-            if (index == start) return true;
-            curGas += gas[index];
-        }
-        
-        return false;
-    }
+   
 }
