@@ -3,6 +3,11 @@
 //HashMap and sliding window
 //Key words: max, consecutives
 
+//We can use prefix sum and binary search to solve this problem.
+//Let p(x) is the sum from 0 to x. Then with x, y, x >= y, x - y - (P(x) - P(y)) will be the number of zero from x to y.Our objective is maximizing the window(x - y)
+//For each x, the candidate y is from 0: x, and if x - y - (P(x) - P(y)) <= k, we can safely ignore any k that y < k < x, because the number of zero from k to y always
+//less then in from y to x.
+//Because of that, we can use binary search, 
 class Solution {
     public int longestOnes(int[] nums, int k) {
         int nZero = 0;
