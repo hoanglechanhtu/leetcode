@@ -44,3 +44,33 @@ class Solution {
         return true;
     }
 }
+
+
+
+class Solution {
+    int max = 0;
+    public int maxProduct(String s) {
+        build(s.toCharArray(), 0, "", "");
+        return max;
+    }
+    
+    
+    void build(char[] c, int index, String s1, String s2) {
+        if (index == c.length) {
+            if (isPalindrome(s1) && isPalindrome(s2)) {
+                max = Math.max(max, s1.length() * s2.length());
+            }
+            return;
+        }
+        
+        build(c, index + 1, s1 + c[index], s2);
+        build(c, index + 1, s1, s2 + c[index]);
+        build(c, index + 1, s1, s2);
+    }
+    boolean isPalindrome(String s) {
+        for (int i = 0; i < s.length()/2; i ++) {
+            if (s.charAt(i) != s.charAt(s.length() - i - 1)) return false;
+        }
+        return true;
+    }
+}
