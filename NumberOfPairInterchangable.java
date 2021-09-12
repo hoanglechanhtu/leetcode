@@ -32,3 +32,21 @@ class Solution {
         return n * (n - 1)/2L;
     }
 }
+
+
+
+class Solution {
+    public long interchangeableRectangles(int[][] rectangles) {
+        Map<Double, Integer> ratioFreq = new HashMap<>();
+        long res = 0;
+        for (int i = 0; i < rectangles.length; i ++) {
+            Double ratio = Double.valueOf(rectangles[i][0]) / Double.valueOf(rectangles[i][1]);
+            res += ratioFreq.getOrDefault(ratio, 0);
+            ratioFreq.merge(ratio, 1, Integer::sum);
+        }
+        
+        return res;
+    }
+    
+   
+}
