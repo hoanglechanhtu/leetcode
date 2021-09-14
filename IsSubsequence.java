@@ -44,3 +44,25 @@ class Solution {
         else return isSubsequenceUtil(s, t.substring(0, t.length() - 1));
     }
 }
+
+//Simple as fuck
+class Solution {
+    public boolean isSubsequence(String s, String t) {
+        int sl=s.length();
+        int tl=t.length();
+        if(sl==0 && tl==0 || tl>0 && sl==0)
+            return true;
+        int k=0;
+         for(int i=0;i<tl;i++)
+        {
+            if(t.charAt(i)==s.charAt(k))
+            {
+                k++;
+                if(k==s.length())
+                    return true;
+            }
+        }
+            return false;
+        
+    }
+}
