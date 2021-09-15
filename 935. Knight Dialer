@@ -1,0 +1,103 @@
+//TIME LIMIT EXCEED
+class Solution {
+    enum Move{
+        Move1(-1, -2),
+        Move2(-2, -1),
+        Move3(-2, 1),
+        Move4(-1, 2),
+        Move5(1, 2),
+        Move6(2, 1),
+        Move7(2, -1),
+        Move8(1, -2);
+        int x;
+        int y;
+        Move(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+    
+    public int knightDialer(int n) {
+        int total = 0;
+        for (int i = 0; i < 4; i ++) {
+            for (int j = 0; j < 3; j ++) {
+                if ((i != 3 || j != 0 ) && (i != 3 || j != 2) ) {
+                    total += getTotal(i, j, n - 1);
+                }
+            }
+        }
+        
+        return total;
+    }
+    
+    int getTotal(int px, int py, int n) {
+        if (n == 0) return 1;
+        int total = 0;
+        for (Move move : Move.values()) {
+            int nx = px + move.x;
+            int ny = py + move.y;
+            if (nx >= 0 && nx < 4 && ny >= 0 && ny < 3)
+                if ((nx != 3 || ny != 0) && (nx != 3 || ny != 2)) 
+                    total += getTotal(nx, ny, n - 1);
+        }
+        return total;
+    }
+}
+
+
+//DP
+class Solution {
+    int mod = 1000000007;
+    enum Move{
+        Move1(-1, -2),
+        Move2(-2, -1),
+        Move3(-2, 1),
+        Move4(-1, 2),
+        Move5(1, 2),
+        Move6(2, 1),
+        Move7(2, -1),
+        Move8(1, -2);
+        int x;
+        int y;
+        Move(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+    
+    public int knightDialer(int n) {
+        int[][] dp = new int[12][n + 1];
+        for (int i = 0; i < dp.length; i ++) {
+            Arrays.fill(dp[i], -1);
+        }
+        int total = 0;
+        for (int i = 0; i < 4; i ++) {
+            for (int j = 0; j < 3; j ++) {
+                if ((i != 3 || j != 0 ) && (i != 3 || j != 2) ) {
+                    total += (getTotal(i, j, n - 1, dp) % mod);
+                    total = total % mod;
+                }
+            }
+        }
+        
+        return total;
+    }
+    
+    int getTotal(int px, int py, int n, int[][] dp) {
+        if (n == 0) return 1;
+        int total = 0;
+        if (dp[px * 3 + py][n] != -1) return dp[px * 3 + py][n];
+        for (Move move : Move.values()) {
+            int nx = px + move.x;
+            int ny = py + move.y;
+            if (nx >= 0 && nx < 4 && ny >= 0 && ny < 3)
+                if ((nx != 3 || ny != 0) && (nx != 3 || ny != 2)) {
+                    total += (getTotal(nx, ny, n - 1, dp) % mod);
+                    total = total % mod;
+                }
+            
+        }
+        dp[px * 3 + py][n] = total;
+        return total;
+    }
+}
