@@ -1,0 +1,9 @@
+class Solution {
+    public boolean isRectangleCover(int[][] rectangles) {
+        
+    }
+}
+
+// Observation
+1.Some of rectangle's corner connect with other corner(except former's corner)
+2.Calculate total region of all rectangles and compare with former rectangle.
