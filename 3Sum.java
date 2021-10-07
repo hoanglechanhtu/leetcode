@@ -39,3 +39,38 @@ class Solution {
         return res;
     }
 }
+
+
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        // a + b + c = 0
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = 0; i < nums.length; i ++) {
+            if (i == 0 || nums[i] != nums[i - 1]) {
+                
+                int left = i + 1, right = nums.length - 1;
+                while (left < right){
+                int sum = nums[left] + nums[right] + nums[i];
+                if (sum > 0) {
+                    right--;
+                } else if (sum < 0) {
+                    left ++;
+                } else {
+                    List<Integer> list = new ArrayList<>();
+                    list.add(nums[i]);
+                    list.add(nums[left]);
+                    list.add(nums[right]);
+                    res.add(list);
+                    left ++;
+                    while (nums[left] == nums[left - 1] && left < right) {
+                        left ++;
+                    }
+                }
+                }
+            }
+        }
+        
+        return res;
+    }
+}
