@@ -23,3 +23,20 @@ class Solution {
         return pre;
     }
 }
+class Solution {
+    
+    public ListNode reverseList(ListNode head) {
+        return reverse(head);
+    }
+    
+    ListNode reverse(ListNode node) {
+        if (node == null || node.next == null) return node;
+        
+        ListNode res = reverse(node.next);
+        node.next.next = node;      
+        node.next = null;
+        
+        return res;
+        
+    }
+}
