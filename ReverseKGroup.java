@@ -42,3 +42,36 @@ class Solution {
         return i == kElement;
     }
 }
+
+
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        Deque<ListNode> queue = new ArrayDeque<>();
+        ListNode dummyHead = new ListNode(0, head);
+        ListNode pre = dummyHead;
+        //1 2 3 4 5
+        
+        while(head != null) {
+            int i = 0;
+            while (i < k && head != null) {
+                i ++;
+                queue.addFirst(head);
+                head = head.next;
+            }
+            
+            if (i == k) {
+                while(i > 0) {
+                    ListNode node = queue.removeFirst();
+                    node.next = null;
+                    pre.next = node;
+                    pre = pre.next;
+                    i --;
+                }
+            } else {
+                pre.next = queue.removeLast();
+            }
+        }
+        
+        return dummyHead.next;
+    }
+}
