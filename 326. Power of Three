@@ -9,3 +9,15 @@ class Solution {
         }
     }
 }
+
+class Solution {
+    public boolean isPowerOfThree(int n) {
+      //base 2 
+      // 2 -> 10
+      // 4 -> 100
+      // 8 -> 1000
+      // so if a number is power of n, then in base n, the number will start with 1 and follow by only zero digit
+        String baseChange = Integer.toString(n, 3);
+        return baseChange.matches("^10*$");
+    }
+}
