@@ -1,0 +1,24 @@
+class Solution {
+    public int findTheWinner(int n, int k) {
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i ++) {
+            arr[i] = i + 1;
+        }
+        
+        int maxSize = n;
+        int start = 0;
+        while(maxSize != 1) {
+            int losePos = (start + k) % maxSize - 1;
+            if (losePos == -1) {
+                losePos = maxSize - 1;
+            }
+            for (int i = losePos; i < maxSize - 1 ; i ++) {
+                arr[i] = arr[i + 1];
+            }
+            start = losePos + 1 == maxSize ? 0 : losePos;
+            maxSize--;
+        }
+        
+        return arr[0];
+    }
+}
