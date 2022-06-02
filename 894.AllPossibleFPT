@@ -1,0 +1,54 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+ /*
+ if n = 1 
+  tree with only one node
+ if n = 2 -> no fully binary tree
+ if n = 2k + 1
+  tree with one head and left + right
+    left = allPossibleFPT(nLeft)
+    right = allPossibleFPT(n - nLeft - 1)
+    for each pair(left, right) => create a tree with node and left right
+ 
+ 
+ 
+ */
+class Solution {
+    Map<Integer, List<TreeNode>> memo = new HashMap();
+    public List<TreeNode> allPossibleFBT(int n) {
+        if (!memo.containsKey(n)) {
+            List<TreeNode> res = new ArrayList();
+            if (n == 1) {
+                res.add(new TreeNode(0));
+            } else if (n % 2 == 1) {
+                for (int i = 0; i < n; i ++) {
+                    int j = n - i - 1;
+                    for (TreeNode left : allPossibleFBT(i)) {
+                        for (TreeNode right : allPossibleFBT(j)) {
+                            TreeNode node = new TreeNode(0);
+                            node.left = left;
+                            node.right = right;
+                            res.add(node);
+                        }
+                    }
+                }
+            }
+            memo.put(n, res);
+        } 
+        return memo.get(n); 
+        
+    }
+}
