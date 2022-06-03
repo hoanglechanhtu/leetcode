@@ -1,0 +1,66 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    List<Integer> eligiblePos = new ArrayList();
+    public List<Integer> diffWaysToCompute(String expression) {
+        int[][] memo = new int[expression.length() + 2][expression.length() + 2];
+
+        eligiblePos.add(-1);
+        for (int i = 0; i < expression.length(); i ++) {
+            if (expression.charAt(i) == '+' || expression.charAt(i) == '-' || expression.charAt(i) == '*') {
+                eligiblePos.add(i);
+            }
+        }
+        eligiblePos.add(expression.length());
+        return diffWaysToCompute(expression, -1, expression.length());
+    }
+
+
+    List<Integer> diffWaysToCompute(String expression, int start, int end) {
+        List<Integer> res = new ArrayList();
+        int nOp = numberOfOp(expression, start, end);
+        if(nOp == 0) {
+            res.add(Integer.valueOf(expression.substring(start + 1, end)));
+        } else if (nOp == 1) {
+            res.add(calculate(expression, start, end));
+        }else {
+            for (int i = 0; i < eligiblePos.size(); i ++) {
+               if (eligiblePos.get(i) > start && eligiblePos.get(i) < end) {
+                   List<Integer> left = diffWaysToCompute(expression, start, eligiblePos.get(i));
+                   List<Integer> right = diffWaysToCompute(expression, eligiblePos.get(i), end);
+                   int opIndex = i;
+                   left.forEach(l -> right.forEach(r -> {
+                       res.add(calculate(l, r, expression.charAt(eligiblePos.get(opIndex))));
+                   }));
+               }
+            }
+        }
+        return res;
+    }
+    int numberOfOp(String expression, int from, int to) {
+        int n = 0;
+        for (int i = from + 1; i < to; i ++) {
+            if (expression.charAt(i) == '+' || expression.charAt(i) == '-' || expression.charAt(i) == '*') {
+                n ++;
+            }
+        }
+        return n;
+    }
+    int calculate(String expression, int from, int to) {
+        int opIndex = 0;
+        for (int i = from + 1; i < to; i ++) {
+            if (expression.charAt(i) == '+' || expression.charAt(i) == '-' || expression.charAt(i) == '*') {
+                opIndex = i;
+            }
+        }
+        return calculate(Integer.valueOf(expression.substring(from + 1, opIndex)), Integer.valueOf(expression.substring(opIndex + 1, to)), expression.charAt(opIndex));
+    }
+
+    int calculate(int left, int right, char op) {
+        if (op == '+') return left + right;
+        if (op == '-') return left - right;
+        if (op == '*') return left * right;
+        return 0;
+    }
+}
