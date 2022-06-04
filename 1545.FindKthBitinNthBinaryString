@@ -1,0 +1,41 @@
+class Solution {
+    String[] arr;
+    public char findKthBit(int n, int k) {
+        arr = new String[n];
+        arr[0] = "0";
+        return findString(n).toCharArray()[k - 1];
+    }
+    
+    String findString(int n) {
+        if (arr[n - 1] != null) return arr[n - 1];
+        
+        String res = findString(n - 1) + "1" + reverse(inverse(findString(n - 1)));
+        arr[n - 1] = res;
+        return res;
+        
+    }
+    
+    String reverse(String s) {
+        char[] cs = s.toCharArray();
+        for (int i = 0; i < s.length()/2 ; i ++) {
+            char temp = cs[i];
+            cs[i] = cs[s.length() - i -1];
+            cs[s.length() - i -1] = temp;
+        }
+        return String.valueOf(cs);
+    }
+    
+    String inverse(String s) {
+        char[] cs = new char[s.length()];
+        for (int i = 0; i < s.length(); i ++) {
+            if (s.charAt(i) == '0') {
+                cs[i] = '1';
+            } else {
+                cs[i] = '0';
+            }
+        }
+        
+        return String.valueOf(cs);
+        
+    }
+}
