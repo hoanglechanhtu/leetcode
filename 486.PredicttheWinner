@@ -1,0 +1,20 @@
+class Solution {
+    int totalScore = 0;
+    public boolean PredictTheWinner(int[] nums) {
+        for (int i = 0; i < nums.length; i ++) {
+            totalScore += nums[i];
+        }
+        return helper(nums, 0, nums.length - 1, 0, 0);
+    }
+    
+    boolean helper(int[] nums, int from, int to, int currentScore, int choose) {
+        choose = Math.abs(choose - 1);
+        if (from >= to) {
+            currentScore = currentScore + nums[from] * choose;
+            return currentScore >= totalScore - currentScore;
+        } else {
+            if (choose == 1) return helper(nums, from + 1, to, currentScore + nums[from] * choose, choose) || helper(nums, from, to - 1, currentScore + nums[to] * choose, choose); 
+            else return helper(nums, from + 1, to, currentScore + nums[from] * choose, choose) && helper(nums, from, to - 1, currentScore + nums[to] * choose, choose); 
+        }
+    }
+}
