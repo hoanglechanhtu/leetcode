@@ -1,0 +1,49 @@
+class Solution {
+    int i = 0;
+    public boolean parseBoolExpr(String expression) {
+        return parse(expression);
+    }
+    
+    boolean parse(String s) {
+        i ++;
+        if (s.charAt(i - 1) == 't') return true;
+        if (s.charAt(i - 1) == 'f') return false;
+        if (s.charAt(i - 1) == '!') {
+            return parseNot(s);
+        } 
+        if (s.charAt(i - 1) == '&') {
+            return parseAnd(s);
+        } 
+        if (s.charAt(i - 1) == '|') {
+            return parseOr(s);
+        } 
+        return true;
+    }
+    
+    boolean parseNot(String s) {
+        i ++;
+        boolean res = !parse(s);
+        i ++;
+        return res;
+    }
+    
+    boolean parseAnd(String s) {
+        boolean res = true;
+        while(s.charAt(i) != ')') {
+            i ++;
+            res = parse(s) && res;
+        }
+        i ++;
+        return res;
+    }
+    
+    boolean parseOr(String s) {
+        boolean res = false;
+        while(s.charAt(i) != ')') {
+            i ++;
+            res = parse(s) || res;
+        }
+        i ++;
+        return res;
+    }
+}
