@@ -1,0 +1,33 @@
+class Solution {
+    public String makeLargestSpecial(String s) {
+        if (s.equals("") || s == null) return s;
+        else return solve(s);
+    }
+    
+    String solve(String s) {
+        if (s.length() == 0) return s;
+        int c = 0;
+        int i = 0;
+        List<String> res = new ArrayList<>();
+            
+        for (int j = i; j < s.length(); j ++) {
+            if (s.charAt(j) == '1') c++;
+            else c--;
+            //10
+            if (c == 0) {
+                res.add("1" + solve(s.substring(i + 1, j)) + "0");
+                i = j + 1;
+            }
+            
+        }
+                        
+        Collections.sort(res);
+        StringBuilder builder = new StringBuilder();
+        for (int k = res.size() - 1; k >= 0; k--) {
+            builder.append(res.get(k));
+        }
+        
+        return builder.toString();
+    }
+    
+}
