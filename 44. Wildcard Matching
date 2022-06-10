@@ -1,0 +1,30 @@
+class Solution {
+    public boolean isMatch(String s, String p) {
+        int sIndex = 0, pIndex = 0, sStar = -1, pStar = -1;
+        while(sIndex < s.length()) {
+            if (pIndex < p.length() && (p.charAt(pIndex) == '?' || p.charAt(pIndex) == s.charAt(sIndex))) {
+                pIndex ++;
+                sIndex ++;
+                continue;
+            }
+            
+            if (pIndex < p.length() && p.charAt(pIndex) == '*') {
+                pStar = pIndex;
+                pIndex ++;
+                sStar = sIndex;
+                continue;
+            }
+            
+            if (pStar != -1) {
+                sIndex = sStar + 1;
+                sStar += 1;
+                pIndex = pStar + 1;
+                continue;
+            }
+            
+            return false;
+        }
+        while (pIndex < p.length() && p.charAt(pIndex) == '*') pIndex ++;
+        return pIndex == p.length();
+    }
+}
