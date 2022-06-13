@@ -1,0 +1,38 @@
+class Solution {
+    int index = 0;
+    
+    
+    public int calculate(String s) {
+        int res = 0;
+        char oper = '+';
+        while( index < s.length()) {
+            char cur = s.charAt(index);
+            index ++;
+            if (cur == '+') {
+                oper = '+';
+            } else if (cur == '-') {
+                oper = '-';
+            } else if (cur == '(') {
+                if (oper == '+') res = res + calculate(s);
+                else res = res - calculate(s);
+            } else if (cur >= '0' && cur <= '9') {
+                if (oper == '+') res = res + getNumber(s);
+                else res = res - getNumber(s); 
+            } else if (cur == ')') {
+                return res;
+            }
+            
+        }
+        
+        return res;
+    }
+    int getNumber(String s) {
+        index--;
+        int res = 0;
+        while(index < s.length() && s.charAt(index) >= '0' && s.charAt(index) <= '9') {
+            res = res * 10 + s.charAt(index) - '0';
+            index ++;
+        }
+        return res;
+    }
+}
