@@ -1,0 +1,21 @@
+class Solution {
+    public String sortSentence(String s) {
+        List<String> list = new ArrayList<>();
+        int i = 0;
+        for (int j = 0; j < s.length(); j ++) {
+            if (s.charAt(j) == ' ') {
+                list.add(s.substring(i, j));
+                i = j + 1;
+            }
+        }
+        
+        list.add(s.substring(i, s.length()));
+        Collections.sort(list, (x, y) -> (x.charAt(x.length() - 1) - (y.charAt(y.length() - 1))));
+        StringBuilder strBuilder = new StringBuilder();
+        for (i = 0; i < list.size(); i ++) {
+            String str = list.get(i);
+            strBuilder.append(" " + str.substring(0, str.length() - 1));
+        }
+        return strBuilder.toString().substring(1);
+    }
+}
