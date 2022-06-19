@@ -1,0 +1,56 @@
+class Solution {
+    List<List<String>> res;
+    public List<List<String>> solveNQueens(int n) {
+        res = new ArrayList<>();
+        solve(n);
+        return res;
+    }
+    
+    boolean[] row;
+    int[] arr;
+    boolean[] add;
+    boolean[] sub;
+
+    public void solve(int n) {
+        row = new boolean[n];
+        arr = new int[n];
+        add = new boolean[2 * n];
+        sub = new boolean[2 * n];
+        tryWithCol(0, n);
+    }
+
+    void tryWithCol(int i, int n) {
+        for (int t = 0; t < n; t ++) {
+            if (!row[t] && !add[i + t] && !sub[t - i + n - 1]) {
+                row[t] = true;
+                add[i + t] = true;
+                sub[t - i + n - 1] = true;
+                arr[i] = t;
+                if (i == n - 1) {
+                    buildRes(arr, n);
+                } else {
+                    tryWithCol(i + 1, n);
+                }
+                row[t] = false;
+                add[i + t] = false;
+                sub[t - i + n - 1] = false;
+            }
+        }
+    }
+    
+    void buildRes(int[] arr, int n) {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < n; i ++) {
+            StringBuilder builder = new StringBuilder();
+            for (int k = 0; k < n; k ++) {
+                if (arr[i] == k) {
+                    builder.append("Q");
+                } else {
+                    builder.append(".");
+                }
+            }
+            list.add(builder.toString());
+        }
+        res.add(list);
+    }
+}
