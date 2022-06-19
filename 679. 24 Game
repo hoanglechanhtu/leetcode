@@ -1,0 +1,78 @@
+class Solution {
+    List<String> samples = new ArrayList<>();
+    List<Integer> res = new ArrayList<>();
+    StringBuilder builder = new StringBuilder();
+    int LAST = 6;
+    boolean[] used = new boolean[4];
+    char[] opers = new char[]{'+', '-', '*', '/'};
+    public boolean judgePoint24(int[] cards) {
+        built(cards);
+        for (int i = 0; i < samples.size(); i ++) {
+            List<Double> res = calculate(0, LAST + 1, samples.get(i));
+            for (int j = 0; j < res.size(); j ++) {
+                if (Math.abs(res.get(j) - 24) < 0.0000001) return true;
+            }
+        }
+        return false;
+    }
+    
+    void built(int[] cards) {
+        tryWithNumber(0, cards);
+    }
+    
+    void tryWithNumber(int i, int[] cards) {
+        for(int k = 0; k < 4; k ++) {
+            if (!used[k]) {
+                used[k] = true;
+                builder.append(cards[k]);
+                if (i == LAST) {
+                    samples.add(builder.toString());
+                } else {
+                    tryWithOper(i + 1, cards);
+                }
+                used[k] = false;
+                builder.deleteCharAt(i);
+            }
+        }
+    }
+    
+    void tryWithOper(int i, int[] cards) {
+        for (int k = 0; k < 4; k ++) {
+            builder.append(opers[k]);
+            tryWithNumber(i + 1, cards);
+            builder.deleteCharAt(i);
+        }
+    }
+    
+    List<Double> calculate(int lo, int hi, String expr) {
+        List<Double> res = new ArrayList<>();
+        if (hi - lo == 1) {
+            res.add(Double.valueOf(expr.charAt(lo) - '0'));
+        } else {
+            for (int i = lo + 1; i < hi; i += 2) {
+                char oper = expr.charAt(i);
+                List<Double> left = calculate(lo, i, expr);
+                List<Double> right = calculate(i + 1, hi, expr);
+                for (int m = 0; m < left.size(); m ++) {
+                    for (int n = 0; n < right.size(); n ++) {
+                        if (!(right.get(n) == 0 && oper == '/')) {
+                            res.add(cal(left.get(m), right.get(n), oper));
+                        }
+                    }
+                }
+            }
+        }
+        return res;
+
+    }
+    
+    double cal(double x, double y, char oper) {
+        if (oper == '+') return x + y;
+        if (oper == '-') return x - y;
+        if (oper == '/') return x/y;
+        if (oper == '*') return x * y;
+        return 0;
+    }
+    
+    
+}
