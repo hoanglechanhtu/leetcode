@@ -1,0 +1,31 @@
+class Solution {
+    int[] arr;
+    List<List<Integer>> res = new ArrayList<>();
+    public List<List<Integer>> combine(int n, int k) {
+        arr = new int[k];
+        tryWith(0, n, k);
+        return res;
+    }
+    
+    void tryWith(int i, int n, int k) {
+        int previos = i == 0 ? 0 : arr[i - 1];
+        for (int t = previos + 1; t <= n - k + i + 1; t++) {
+            arr[i] = t;
+            if (i == k - 1) {
+                addResult();
+            } else {
+                tryWith(i + 1, n, k);
+            }
+        }
+    }
+    
+    void addResult(){
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < arr.length; i ++){
+            list.add(arr[i]);
+        }
+        
+        res.add(list);
+        
+    }
+}
