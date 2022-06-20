@@ -1,0 +1,27 @@
+class Solution {
+    StringBuilder builder = new StringBuilder();
+    List<String> res = new ArrayList<>();
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        tryWith(0, s, wordDict);
+        return res;
+    }
+    
+    void tryWith(int i, String s, List<String> wordDict) {
+        for (int t = 0; t < wordDict.size(); t ++) {
+            if (s.startsWith(wordDict.get(t))) {
+                int currentSize = builder.length();
+                builder.append(wordDict.get(t) + " ");
+                String remain = s.substring(wordDict.get(t).length(), s.length());
+                if (remain == "") {
+                    String temp = builder.toString();
+                    res.add(temp.substring(0, temp.length() - 1));
+                } else {
+                    tryWith(i + 1, remain, wordDict);
+                }
+                for(int k = 0; k < wordDict.get(t).length() + 1; k ++) {
+                    builder.deleteCharAt(currentSize);
+                }
+            }
+        }
+    }
+}
