@@ -1,0 +1,26 @@
+class Solution {
+    int res = 0;
+    int max = 0;
+    public int countMaxOrSubsets(int[] nums) {
+        max = nums[0];
+        for (int i = 0; i < nums.length; i ++) {
+            max = max | nums[i];
+        }
+        tryWith(0, -1, 1, nums);
+        return res;
+        
+    }
+    
+    void tryWith(int i, int pre, int cur, int[] nums) {
+        int temp = cur;
+        for (int t = pre + 1; t < nums.length; t++) {
+            cur = pre == -1 ? nums[t] : temp | nums[t];
+            if (cur == max) res ++;
+            if (i == nums.length - 1) {
+                return;
+            } else {
+                tryWith(i + 1, t, cur, nums);
+            }
+        }
+    }
+}
