@@ -1,0 +1,36 @@
+class CombinationIterator {
+    List<String> combinations = new ArrayList<>();
+    StringBuilder builder = new StringBuilder();
+    int current = 0;
+    public CombinationIterator(String characters, int combinationLength) {
+        tryWith(0, -1, characters, combinationLength);
+    }
+    
+    void tryWith(int i, int pre, String chars, int length) {
+        int start = pre == -1 ? 0 : pre + 1;
+        for (int t = start; t < chars.length(); t ++) {
+            builder.append(chars.charAt(t));
+            if (i == length - 1) {
+                combinations.add(builder.toString());
+            } else {
+                tryWith(i + 1, t, chars, length);
+            }
+            builder.deleteCharAt(i);
+        }
+    }
+    public String next() {
+        return combinations.get(current ++);
+        
+    }
+    
+    public boolean hasNext() {
+        return current < combinations.size();
+    }
+}
+
+/**
+ * Your CombinationIterator object will be instantiated and called as such:
+ * CombinationIterator obj = new CombinationIterator(characters, combinationLength);
+ * String param_1 = obj.next();
+ * boolean param_2 = obj.hasNext();
+ */
