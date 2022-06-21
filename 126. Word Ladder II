@@ -1,0 +1,83 @@
+class Solution {
+ static public int nCount = 0;
+    List<String> curPath = new ArrayList<>();
+    List<List<String>> res = new ArrayList<>();
+    int minStep = Integer.MAX_VALUE;
+    int curStep = 0;
+    Map<String, List<String>> map = new HashMap<>();
+    Map<String, Boolean> used = new HashMap<>();
+    Map<String, Integer> startAt = new HashMap<>();
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        initMap(beginWord, wordList);
+        curPath.add(beginWord);
+        tryWith(1, beginWord, endWord, wordList);
+        return res;
+    }
+
+
+    private void tryWith(int i, String curWord, String endWord, List<String> wordList) {
+        nCount++;
+        if (map.get(curWord) == null) return;
+        map.get(curWord).forEach(word -> {
+            if (!used.get(word) && i <= startAt.get(word)) {
+
+                used.put(word, true);
+                curStep++;
+                curPath.add(word);
+                startAt.put(word, i);
+                if (word.equals(endWord) && curStep <= minStep) {
+                    if (curStep < minStep) {
+                        minStep = curStep;
+                        res = new ArrayList<>();
+                    }
+                    res.add(new ArrayList<>(curPath));
+                } else {
+                    tryWith(i + 1, word, endWord, wordList);
+                }
+                curPath.remove(i);
+                used.put(word, false);
+                curStep--;
+
+            }
+        });
+    }
+
+    private void initMap(String beginWord, List<String> wordList) {
+
+        for (int i = 0; i < wordList.size(); i++) {
+            used.put(wordList.get(i), false);
+            startAt.put(wordList.get(i), Integer.MAX_VALUE);
+            for (int j = 0; j < wordList.size(); j++) {
+                if (isTransformable(wordList.get(i), wordList.get(j))) {
+                    if (!map.containsKey(wordList.get(i))) {
+                        map.put(wordList.get(i), new ArrayList<>());
+                    }
+                    map.get(wordList.get(i)).add(wordList.get(j));
+                }
+            }
+        }
+        if (map.containsKey(beginWord)) return;
+        for (int i = 0; i < wordList.size(); i++) {
+
+            if (isTransformable(beginWord, wordList.get(i))) {
+                if (!map.containsKey(beginWord)) {
+                    map.put(beginWord, new ArrayList<>());
+                }
+                map.get(beginWord).add(wordList.get(i));
+            }
+        }
+
+    }
+
+
+    private boolean isTransformable(String curWord, String nextWord) {
+        int d = 0;
+        for (int i = 0; i < curWord.length(); i++) {
+            if (curWord.charAt(i) != nextWord.charAt(i)) d++;
+        }
+
+        return d == 1;
+    }
+
+    
+}
