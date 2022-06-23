@@ -1,0 +1,50 @@
+class Solution {
+    boolean[] isRemove;
+    int minOper = Integer.MAX_VALUE;
+    Set<String> res = new HashSet<>();
+    public List<String> removeInvalidParentheses(String s) {
+        isRemove = new boolean[s.length()];
+        tryRemove(0, 0, s);
+        return new ArrayList<String>(res);
+    }
+    
+    void tryRemove(int i, int nOp, String s) {
+        if (i == s.length() && isValid(s)) {
+            if (nOp < minOper) {
+                minOper = nOp;
+                res = new HashSet<>();
+            } 
+            if (nOp <= minOper) addResult(s);
+        }
+        if (i >= s.length()) return;
+        
+        if (s.charAt(i) == ')' || s.charAt(i) == '(') {
+            isRemove[i] = true;
+            tryRemove(i + 1, nOp + 1, s);    
+        }
+        isRemove[i] = false;
+        tryRemove(i + 1, nOp, s);
+    }
+    
+    void addResult(String s) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < s.length(); i ++) {
+            if (!isRemove[i]) builder.append(s.charAt(i));
+        }
+        
+        res.add(builder.toString());
+    }
+    
+    
+    
+    boolean isValid(String s) {
+        int leftPth = 0;
+        for (int i = 0; i < s.length(); i ++) {
+            if (isRemove[i]) continue;
+            if (s.charAt(i) == '(') leftPth ++;
+            else if (s.charAt(i) == ')') leftPth--;
+            if (leftPth < 0) return false;
+        }
+        return leftPth == 0;
+    }
+}
