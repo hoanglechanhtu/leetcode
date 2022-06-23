@@ -1,0 +1,25 @@
+class Solution {
+    List<String> res = new ArrayList<>();
+    char[] arr;
+    char[] options = new char[]{'a', 'b', 'c'};
+    public String getHappyString(int n, int k) {
+        arr = new char[n];
+        tryWith(0, n);
+        if (res.size() < k) return "";
+        else return res.get(k - 1);
+    }
+    
+    void tryWith(int i, int n) {
+        for (int k = 0; k < 3; k ++) {
+            char cur = options[k];
+            if (i == 0 || cur != arr[i - 1]) {
+                arr[i] = cur;
+                if (i == n - 1) {
+                    res.add(new String(arr));
+                } else {
+                    tryWith(i + 1, n);
+                }
+            }
+        }
+    }
+}
