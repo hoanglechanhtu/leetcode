@@ -1,0 +1,14 @@
+class Solution {
+    public int kthGrammar(int n, int k) {
+        return build(n, k - 1, true);
+    }
+    
+    public int build(int n, int k, boolean same) {
+        if (n == 0 && same) return 0;
+        if (n == 0 && !same) return 1;
+        int newK = k / 2;
+        int remain = k % 2;
+        int res = build(n - 1, newK, remain == 0);
+        return same ? res : 1 - res; 
+    }
+}
