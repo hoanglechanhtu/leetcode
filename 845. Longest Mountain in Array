@@ -1,0 +1,45 @@
+class Solution {
+    public int longestMountain(int[] arr) {
+        if (arr.length < 3) return 0;
+        int n = arr.length;
+        int max = 0;
+        int[] darr = new int[n - 1];
+        for (int i = 0; i < n - 1; i ++) {
+            darr[i] = arr[i + 1] - arr[i];
+        }
+        
+        int slow = 0;
+        int fast = 0;
+        while(fast < n - 1) {
+            slow = fast;
+            fast = slow + 1;
+            while(slow < n - 1 && darr[slow] <= 0) {
+                slow ++;
+                fast ++;
+            }
+            int cur = slow;
+            while(fast < n - 1 && darr[fast] > 0) {
+                fast ++;
+            }
+            if (cur == fast) continue;
+            cur = fast;
+            while(fast < n - 1 && darr[fast] < 0) {
+                fast ++;
+            }
+            if (cur == fast) continue;
+            max = Math.max(max, fast - slow + 1 >= 3 ? fast - slow + 1 : 0);
+            slow = fast;
+        }
+        
+        return max;
+    }
+}
+
+/*
+  2,1,4,7,3,2,5
+  -> dis[i] = arr[i + 1] - arr[i]
+  -1,3,3,-4,-1,3
+  an array will have left side >0 and right side < 0, with left, and right, right - left + 1 > 3
+
+
+*/
