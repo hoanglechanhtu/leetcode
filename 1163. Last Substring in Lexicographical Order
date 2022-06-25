@@ -1,0 +1,44 @@
+class Solution {
+    public String lastSubstring(String s) {
+        char[] arr = s.toCharArray();
+        int n = s.length();
+        int max = n - 1;
+        int k = n - 1;
+        while(k >= 0) {
+            while(k >= 1 && arr[k - 1] == arr[k]) {
+                k--;
+            }
+            if (compare(arr, k, max) > 0) {
+                max = k;
+            }
+            k--;
+        }
+        
+        return s.substring(max);
+    }
+    
+    int compare(char[] arr, int i, int j) {
+        int iSize = j;
+        for (; j < arr.length && i < iSize; j ++) {
+            if (arr[i] > arr[j]) return 1;
+            if (arr[i] < arr[j]) return -1;
+            i++;
+        }
+        return 1;
+    }
+    
+}
+
+
+/*
+leetcode -> tcode
+abcabc   -> cabc
+
+-> last substring in lexicographical order is always poststring
+-> so we can compare by the start of substring.     compare(de,e), compare(ode, e), compare(code, ode)
+->          etetde. i
+              etde. j
+              when we compare, we only need to iterate i from start to j, because compare(j, j - k) always > 0  (remember j is previous max substring)
+
+
+*/
