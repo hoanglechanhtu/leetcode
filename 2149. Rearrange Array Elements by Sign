@@ -1,0 +1,25 @@
+class Solution {
+    public int[] rearrangeArray(int[] nums) {
+        int n = nums.length;
+        int[] greater = new int[n/2];
+        int[] less = new int[n/2];
+        int j = 0; int k = 0;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] >= 0) {
+                greater[j ++] = nums[i];
+            } else {
+                less[k ++] = nums[i];
+            }
+        }
+        
+        for (int i = 0; i < n; i ++) {
+            if (i % 2 == 0) {
+                nums[i] = greater[i/2];
+            } else {
+                nums[i] = less[i/2];
+            }
+        }
+        
+        return nums;
+    }
+}
