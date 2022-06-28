@@ -1,0 +1,31 @@
+class Solution {
+    public List<Boolean> camelMatch(String[] queries, String pattern) {
+        List<Boolean> res = new ArrayList<>();
+        for (int i = 0; i < queries.length; i ++) {
+            res.add(match(queries[i], pattern));
+        }
+        return res;
+    }
+    
+    boolean match(String s, String pattern) {
+        int sIndex = 0, pIndex = 0;
+        for(;sIndex < s.length(); sIndex ++) {
+            char sChar = s.charAt(sIndex);
+            if(pIndex < pattern.length() && isUpperCase(s.charAt(sIndex))) {
+                if (sChar != pattern.charAt(pIndex)) return false;
+                pIndex ++;
+            } else if (pIndex >= pattern.length() && isUpperCase(s.charAt(sIndex))) {
+                return false;
+            } else {
+                if (pIndex < pattern.length() && !isUpperCase(pattern.charAt(pIndex))) {
+                    if (sChar == pattern.charAt(pIndex)) pIndex ++;
+                }
+            }
+        }
+        return pIndex == pattern.length();
+    }
+    
+    boolean isUpperCase(char s) {
+        return s <= 'Z' && s >= 'A';
+    }
+}
