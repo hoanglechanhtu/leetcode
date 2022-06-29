@@ -1,0 +1,28 @@
+class Solution {
+    public int minSwaps(String s) {
+        char[] arr = s.toCharArray();
+        int left = 0;
+        int right = 0;
+        int iLeft = 0;
+        int iRight = arr.length - 1;
+        int count = 0;
+        while(iLeft < iRight) {
+            if (arr[iLeft] == ']') left--;
+            else left ++;
+            if (arr[iRight] == '[') right --;
+            else right ++;
+            
+            if (left < 0 && right < 0) {
+                //swap iLeft with iRight
+                count ++;
+                left += 2;
+                right += 2;
+            }
+            
+            if (left >= 0) iLeft ++;
+            if (right >= 0) iRight --;
+        }
+        
+        return count;
+    }
+}
