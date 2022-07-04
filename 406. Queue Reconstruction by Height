@@ -1,0 +1,52 @@
+class Solution {
+    int[] bit;
+    public int[][] reconstructQueue(int[][] people) {
+        bit = new int[people.length + 1];
+        for (int i = 1; i < bit.length; i ++) {
+            update(i, 1);
+        }
+        int[][] res = new int[people.length][2];
+        Arrays.sort(people, (x, y) -> {
+            if (x[0] != y[0]) return x[0] - y[0];
+            else return y[1] - x[1];
+        });
+        
+        for (int i = 0; i < people.length; i ++) {
+            int[] cur = people[i];
+            int k = cur[1] + 1;
+            int l = 0, r = people.length;
+            while(l < r) {
+                int middle = (l + r)/2;
+                int mValue = sum(middle);
+                if (mValue >= k) {
+                    r = middle;
+                } else {
+                    l = middle + 1;
+                } 
+            }
+            res[l - 1] = cur;
+            update(l, -1);
+        }
+        return res;
+    }
+    
+    void update(int index, int diff) {
+        while(index < bit.length) {
+            bit[index] += diff;
+            index += index & (-index);
+        }
+    }
+    
+    int getSum(int left, int right) {
+        return sum(right) - sum(left - 1);
+    }
+    
+    int sum(int index) {
+        int sum = 0;
+        while(index > 0) {
+            sum += bit[index];
+            index -= index & (-index);
+        }
+        return sum;
+    }
+}
