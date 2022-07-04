@@ -121,3 +121,50 @@ class NumArray {
  * obj.update(index,val);
  * int param_2 = obj.sumRange(left,right);
  */
+
+
+//BIT
+
+class NumArray {
+    int[] sum;
+    int[] nums;
+    public NumArray(int[] nums) {
+        sum = new int[nums.length + 1];
+        Arrays.fill(sum, 0);
+        this.nums = new int[nums.length + 1];
+        for (int i = 0; i < nums.length; i ++) {
+            update(i, nums[i]);
+        }
+    }
+    
+    public void update(int index, int val) {
+        index = index + 1;
+        int diff = val - nums[index];
+        nums[index] = val;
+        while(index < sum.length) {
+            sum[index] += diff;
+            index += (index & (-index));
+        }
+    }
+    
+    public int sumRange(int left, int right) {
+        return sumTo(right + 1) - sumTo(left);
+    }
+    
+    private int sumTo(int index) {
+        int res = 0;
+        while(index > 0) {
+            res += sum[index];
+            index -= (index & (-index));
+        }
+        
+        return res;
+    }
+}
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * obj.update(index,val);
+ * int param_2 = obj.sumRange(left,right);
+ */
