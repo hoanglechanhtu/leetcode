@@ -1,0 +1,34 @@
+class Solution {
+    /*
+    Tails is an array storing the smallest tail in subsequence with size i + 1
+    arr = 4,5,6,3
+    size = 1 -> 4 | 5 | 6 | 3 => smallest = 3 tails[0] = 3
+    size = 2 -> 4,5 | 4,6 | 5,6 => smallest = 6 tails[1] = 5
+    size = 3 -> 4,5,6 => tails[2] = 6
+    
+    for each x in nums
+    if x > all tails -> append x to tails(increase size also)
+    if tails[i - 1] <= x < tails[i] -> update tails[i - 1] = x
+    the tails array is an increasing array -> so we can use binary search to get the correct index to update
+    */
+    
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        int size = 0;
+        int[] tails = new int[n];
+        for (int i = 0; i < n; i ++) {
+            int l = 0, r = size;
+            while(l != r) {
+                int middle = (l + r)/2;
+                if (nums[i] > tails[middle]) {
+                    l = middle + 1;
+                } else {
+                    r = middle;
+                }
+            }
+            tails[l] = nums[i];
+            if (l == size) size ++;
+        }
+        return size;
+    }
+}
