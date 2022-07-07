@@ -1,0 +1,39 @@
+class Solution {
+    int count = 0;
+    boolean[] used;
+    List<Integer> cur = new ArrayList<>();
+    public int numSquarefulPerms(int[] nums) {
+        int n = nums.length;
+        used = new boolean[n];
+        Arrays.sort(nums);
+        count = tryWith(0, nums);
+        return count;
+    }
+    
+    int tryWith(int i, int[] nums) {
+        int previous = -1;
+        int curCount = 0;
+        for (int k = 0; k < nums.length; k ++) {
+            if (!used[k] && nums[k] != previous) {
+                previous = nums[k];
+                used[k] = true;
+                cur.add(nums[k]);
+                if (i == 0 || isSquare(cur.get(i - 1) + nums[k])) {
+                    if (i == nums.length - 1) {
+                        curCount ++;
+                    } else {
+                        curCount += tryWith(i + 1, nums);
+                    }
+                } 
+                used[k] = false;
+                cur.remove(i);
+            }
+        }
+        return curCount;
+    }
+    
+    boolean isSquare(int n){
+        int x = (int)Math.sqrt(n);
+        return x * x == n;
+    }
+}
