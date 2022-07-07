@@ -1,0 +1,31 @@
+class Solution {
+    List<List<Integer>> rest = new ArrayList<>();
+    List<Integer> cur = new ArrayList<>();
+    boolean[] used;
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        int n = nums.length;
+        used = new boolean[n];
+        Arrays.sort(nums);
+        tryWith(0, nums);
+        
+        return rest;
+    }
+    
+    void tryWith(int i, int[] nums) {
+        int previousNumber = -11;
+        for (int k = 0; k < nums.length; k ++) {
+            if(!used[k] && nums[k] != previousNumber){
+                previousNumber = nums[k];
+                cur.add(nums[k]);
+                used[k] = true;
+                if (i == nums.length - 1) {
+                    rest.add(new ArrayList(cur));
+                } else {
+                    tryWith(i + 1, nums);
+                }
+                cur.remove(i);
+                used[k] = false;
+            }
+        }
+    }
+}
