@@ -1,0 +1,39 @@
+class Solution {
+    public String minRemoveToMakeValid(String s) {
+        char[] arr = s.toCharArray();
+        boolean[] remove = new boolean[arr.length];
+        int level = 0;
+        for (int i = 0; i < s.length(); i ++) {
+            if (remove[i]) continue;
+            if (arr[i] == ')') {
+                level --;
+            } else if (arr[i] == '(') {
+                level ++;
+            }
+            if (level < 0) {
+                remove[i] = true;
+                level ++;
+            }
+        }
+        level = 0;
+        for (int i = s.length() - 1; i >= 0; i --) {
+            if (remove[i]) continue;
+            if (arr[i] == ')') {
+                level ++;
+            } else if (arr[i] == '(') {
+                level --;
+            }
+            if (level < 0) {
+                remove[i] = true;
+                level ++;
+            }        
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < s.length(); i ++) {
+            if (!remove[i]) {
+                builder.append(arr[i]);
+            }        
+        }
+        return builder.toString();
+    }
+}
