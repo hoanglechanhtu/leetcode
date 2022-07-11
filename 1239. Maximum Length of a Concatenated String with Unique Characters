@@ -1,0 +1,38 @@
+class Solution {
+    boolean[] used = new boolean[26];
+    int max = 0;
+    int cur = 0;
+    public int maxLength(List<String> arr) {
+        tryWith(0, -1, arr);
+        return max;
+    }
+    
+    void tryWith(int i, int index, List<String> arr) {
+        for (int k = index + 1; k < arr.size(); k++) {
+            String s = arr.get(k);
+            if (isValid(s)) {
+                cur += s.length();
+                max = Math.max(max, cur);
+                for (int t = 0; t < s.length(); t ++) {
+                    used[s.charAt(t) - 'a'] = true;
+                }
+                
+                tryWith(i + 1, k, arr);
+                
+                for (int t = 0; t < s.length(); t ++) {
+                    used[s.charAt(t) - 'a'] = false;
+                }
+                cur -= s.length();
+            }
+        }
+    }
+    
+    boolean isValid(String s) {
+        boolean[] used = new boolean[26];
+        for (int t = 0; t < s.length(); t ++) {
+            if (this.used[s.charAt(t) - 'a'] || used[s.charAt(t) - 'a'])  return false;
+            used[s.charAt(t) - 'a'] = true;
+        }
+        return true;
+    }
+}
