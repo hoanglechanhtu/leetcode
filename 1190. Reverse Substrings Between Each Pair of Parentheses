@@ -1,0 +1,36 @@
+class Solution {
+    public String reverseParentheses(String s) {
+        Stack<String> stack  = new Stack<>();
+        char[] arr = s.toCharArray();
+        int level = 0;
+        for (int i = 0; i < s.length(); i ++) {
+            if (arr[i] == '(') {
+                level ++;
+                stack.push(Character.toString(arr[i]));
+            } else if (arr[i] == ')') {
+                StringBuilder builder = new StringBuilder();
+                String cur = stack.pop();
+                while(!cur.equals("(")) {
+                    if (level % 2 == 1) {
+                        builder.append(cur);
+                    } else {
+                        builder.insert(0, cur);
+                    }
+                    
+                    cur = stack.pop();
+                }
+                
+                stack.push(builder.toString());
+                level--;
+            } else {
+                stack.push(Character.toString(arr[i]));
+            }
+        }
+        
+        StringBuilder builder = new StringBuilder();
+        while(!stack.isEmpty()) {
+            builder.insert(0, stack.pop());
+        }
+        return builder.toString();
+    }
+}
