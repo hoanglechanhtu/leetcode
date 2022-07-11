@@ -1,0 +1,81 @@
+class Solution {
+    Res[][] dp;
+    class Res {
+        public int sum;
+        public int max;
+        public Res(int sum, int max) {
+            this.sum = sum;
+            this.max = max;
+        }
+    }
+    public int mctFromLeafValues(int[] arr) {
+        dp = new Res[arr.length][arr.length];
+       
+        Res res = tryWith(0, arr.length, arr);
+        return res.sum;
+    }
+    
+    Res tryWith(int l, int r, int[] arr) {
+        if (dp[l][r - 1] != null) return dp[l][r - 1];
+       Res res = new Res(Integer.MAX_VALUE, 0);
+       if (l + 1 == r) return new Res(0, arr[l]);
+       for (int i = l + 1; i < r; i ++) {
+           Res left = tryWith(l, i, arr);
+           Res right = tryWith(i, r, arr);
+           int sum = left.sum + right.sum + left.max * right.max;
+           if (sum < res.sum) res = new Res(sum, Math.max(left.max, right.max));
+       }
+        dp[l][r - 1] = res;
+       return res;
+    }
+}
+
+
+class Solution {
+    public int mctFromLeafValues(int[] arr) {
+        int sum = 0;
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < arr.length; i ++) {
+            list.add(arr[i]);
+        }
+        //6,2,4
+        while(list.size() != 1) {
+            int min = Integer.MAX_VALUE;
+            int minIndex = 0;
+            for (int i = 0; i < list.size() - 1;  i ++) {
+                int cur = list.get(i) * list.get(i + 1);
+                if (cur < min) {
+                    min = cur;
+                    minIndex = i;
+                }
+            }
+            sum += min;
+            int keep = Math.max(list.get(minIndex + 1), list.get(minIndex));
+            list.remove(minIndex + 1);
+            list.remove(minIndex);
+            list.add(minIndex, keep);
+        }
+        
+        return sum;
+    }
+}
+
+class Solution {
+    public int mctFromLeafValues(int[] arr) {
+        Stack<Integer> stack = new Stack<>();
+        int cost = 0;
+        stack.push(Integer.MAX_VALUE);
+        for (int a: arr) {
+            while (stack.peek() <= a) {
+                cost += stack.pop() * Math.min(a, stack.peek());
+            }
+            stack.push(a);
+        }
+        
+        while(stack.size() > 2) {
+            cost += stack.pop() * stack.peek();
+        }
+        
+        return cost;
+    }
+}
