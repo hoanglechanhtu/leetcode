@@ -18,3 +18,45 @@ class Solution {
         return total;
     }
 }
+
+class Solution {
+    class Res {
+        public int val;
+        public int index;
+        public Res(int val, int index) {
+            this.val = val;
+            this.index = index;
+        }
+    }
+    long mod = 1000000007L;
+    public int sumSubarrayMins(int[] arr) {
+        Stack<Res> left = new Stack<Res>();
+        Stack<Res> right = new Stack<Res>();
+        int[] leftCover = new int[arr.length];
+        int[] rightCover = new int[arr.length];
+        left.push(new Res(0, -1));
+        for (int i = 0; i < arr.length; i ++) {
+            while(arr[i] <= left.peek().val) {
+                left.pop();
+            }
+            leftCover[i] = i - left.peek().index;
+            left.push(new Res(arr[i], i));
+        }
+        
+        right.push(new Res(0, arr.length));
+        for (int i = arr.length - 1; i >= 0; i --) {
+            while(arr[i] < right.peek().val) {
+                right.pop();
+            }
+            rightCover[i] = right.peek().index - i;
+            right.push(new Res(arr[i], i));
+        }
+        
+        long total = 0;
+        for (int i = 0; i < arr.length; i ++) {
+            total = (total + (long)arr[i] * leftCover[i] * rightCover[i]) % mod;
+        }
+        return (int)total;
+    }
+    
+}
