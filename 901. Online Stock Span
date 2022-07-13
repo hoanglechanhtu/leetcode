@@ -1,0 +1,32 @@
+class StockSpanner {
+    class Res{
+        public int index;
+        public int val;
+        public Res(int index, int val) {
+            this.index = index;
+            this.val = val;
+        }
+    }
+    int index = 0;
+    Stack<Res> stack;
+    public StockSpanner() {
+        stack = new Stack<>();
+        stack.push(new Res(0, Integer.MAX_VALUE));
+    }
+    
+    public int next(int price) {
+        while(stack.peek().val <= price) {
+            stack.pop();
+        }
+        
+        int res = (index ++) - stack.peek().index + 1;
+        stack.push(new Res(index, price));
+        return res;
+    }
+}
+
+/**
+ * Your StockSpanner object will be instantiated and called as such:
+ * StockSpanner obj = new StockSpanner();
+ * int param_1 = obj.next(price);
+ */
