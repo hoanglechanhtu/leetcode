@@ -1,0 +1,63 @@
+class Solution {
+    public int scoreOfParentheses(String s) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(0);
+        
+        for (int i = 0; i < s.length(); i ++) {
+            if (s.charAt(i) == '(') {
+                stack.push(0);
+            } else {
+                int v = stack.pop();
+                int w = stack.pop();
+                stack.push(w + Math.max(2 * v, 1));
+            }
+        }
+        
+        return stack.peek();
+    }
+   
+}
+
+class Solution {
+    public int scoreOfParentheses(String s) {
+        return calculate(s, 0, s.length());        
+    }
+    
+    int calculate(String s, int from, int to) {
+        int bal = 0;
+        int total = 0;
+        for (int k = from; k < to; k ++) {
+            if (s.charAt(k) == ')') bal --;
+            else bal ++;
+            if (bal == 0) {
+                if (k - from == 1) {
+                    total ++;
+                } else {
+                    total += 2 * calculate(s, from + 1, k);
+                }
+                from = k + 1;
+            }
+        }
+        
+        return total;
+    }
+}
+
+class Solution {
+    public int scoreOfParentheses(String s) {
+        int bal = 0;
+        int total = 0;
+        for (int i = 0; i < s.length(); i ++) {
+            if (s.charAt(i) == '(') {
+                bal ++;
+            } else {
+                bal --;
+                if (s.charAt(i - 1) == '(') { // a ()
+                    total += 1 << bal;
+                }
+            }
+        }
+        return total;
+    }
+   
+}
