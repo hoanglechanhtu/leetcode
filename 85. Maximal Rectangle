@@ -1,0 +1,57 @@
+class Solution {
+    public int maximalRectangle(char[][] matrix) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int max = 0;
+        int[] heights = new int[cols];
+
+        for (int k = 1; k <= rows; k ++) {
+            for (int j = 0; j < cols; j ++) {
+                if(matrix[k - 1][j] == '1') heights[j] ++;
+                else heights[j] = 0;
+            }
+            max = Math.max(max, largestRectangleArea(heights));
+        }
+        
+        return max;
+    }
+    
+    class Res{
+        public int val;
+        public int index;
+        public Res(int val, int index){
+            this.val = val;
+            this.index = index;
+        }
+    }
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int[] left = new int[n];
+        int[] right = new int[n];
+        Stack<Res> stack = new Stack<>();
+        stack.push(new Res(Integer.MIN_VALUE, -1));
+        for (int i = 0; i < n; i ++) {
+            while(stack.peek().val >= heights[i]) {
+                stack.pop();
+            }
+            left[i] = i - stack.peek().index;
+            stack.push(new Res(heights[i], i));
+        }
+        stack.clear();  
+        
+        stack.push(new Res(Integer.MIN_VALUE, n));
+        for (int i = n - 1; i >= 0; i --) {
+            while(stack.peek().val >= heights[i]) {
+                stack.pop();
+            }
+            right[i] = stack.peek().index - i;
+            stack.push(new Res(heights[i], i));
+        }
+        
+        int max  = 0;
+        for (int i = 0; i < n; i ++) {
+            max = Math.max(max, heights[i] * (left[i] + right[i] - 1));
+        }
+        return max;
+    }
+}
