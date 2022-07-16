@@ -1,0 +1,71 @@
+class Solution {
+    public int longestValidParentheses(String s) {
+        int n = s.length();
+        char[] arr = s.toCharArray();
+        boolean[][] dp = new boolean[n][n];
+        int max = 0;
+        for (int i = 0; i < n - 1; i ++) {
+            if (arr[i] == '(' && arr[i + 1] == ')') {
+                dp[i][i + 1] = true;
+                max = 2;
+            }
+        }
+        
+        for (int l = 4; l <= n; l ++) {
+            for (int left = 0; left <= n - l; left ++) {
+                int right = left + l - 1;
+                if (arr[left] == '(' && arr[right] == ')' && dp[left + 1][right - 1]) {
+                    dp[left][right] = true;
+                    max = l;
+                } else {
+                    for (int i = left + 1; i < right; i ++) {
+                        if (dp[left][i] && dp[i + 1][right]) {
+                            dp[left][right] = true;
+                            max = l;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return max;
+    }
+}
+
+class Solution {
+    class Entity {
+        public char val;
+        public int index;
+        
+        public Entity(char val, int index){
+            this.val = val;
+            this.index = index;
+        }
+        
+    }
+    public int longestValidParentheses(String s) {
+        Stack<Entity> stack = new Stack<>();
+        int n = s.length();
+        char[] arr = s.toCharArray();
+        stack.push(new Entity('-', -1));
+        
+        for (int i = 0; i < n; i ++) {
+            if (stack.peek().val == '(' && arr[i] == ')') {
+                stack.pop();
+            } else {
+                stack.push(new Entity(arr[i], i));
+            }
+        }
+        
+        int curIndex = n;
+        
+        int max = 0;
+        while(!stack.isEmpty()) {
+            int pop = stack.pop().index;
+            max = Math.max(curIndex - pop - 1, max);
+            curIndex = pop;
+        }
+        
+        return max;
+    }
+}
