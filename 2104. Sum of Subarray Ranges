@@ -1,0 +1,58 @@
+class Solution {
+    class Entity{
+        public int val;
+        public int index;
+        
+        public Entity(int val, int index){
+            this.val = val;
+            this.index = index;
+        }
+    }
+    public long subArrayRanges(int[] nums) {
+        int n = nums.length;
+        
+        int[] smallRange = new int[n];
+        int[] largeRange = new int[n];
+        Stack<Entity> stack = new Stack<>();
+        stack.push(new Entity(Integer.MIN_VALUE, -1));
+        
+        for (int i = 0; i < n; i ++) {
+            while(stack.peek().val >= nums[i]) {
+                Entity pop = stack.pop();
+                smallRange[pop.index] *= i - pop.index;
+            }
+            
+            smallRange[i] += i - stack.peek().index;
+            stack.push(new Entity(nums[i], i));
+        }
+        
+        while(stack.size() != 1) {
+            Entity cur = stack.pop();
+            smallRange[cur.index] *= n - cur.index;
+        }
+        
+        stack.pop();
+        stack.push(new Entity(Integer.MAX_VALUE, -1));
+        for (int i = 0; i < n; i ++) {
+            while(stack.peek().val <= nums[i]) {
+                Entity pop = stack.pop();
+                largeRange[pop.index] *= i - pop.index;
+            }
+            
+            largeRange[i] += i - stack.peek().index;
+            stack.push(new Entity(nums[i], i));
+        }
+        
+        while(stack.size() != 1) {
+            Entity cur = stack.pop();
+            largeRange[cur.index] *= n - cur.index;
+        }
+        
+        long total = 0;
+        for (int i = 0; i < n; i ++) {
+            total = total - (long)smallRange[i] * nums[i] + (long)largeRange[i] * nums[i];
+        }
+        
+        return total;
+    }
+}
