@@ -1,0 +1,58 @@
+class Solution {
+    class Entity {
+        public int val;
+        public int index;
+        public Entity(int val, int index) {
+            this.val = val;
+            this.index = index;
+        }
+    }
+    int mod = 1000000007;
+    public int totalStrength(int[] strength) {
+        long total = 0;
+        int n = strength.length;
+        Stack<Entity> stack = new Stack<>();
+        int[] arr = new int[n];
+        stack.push(new Entity(Integer.MIN_VALUE, -1));
+     
+        
+        for (int i = 0; i < n; i ++) {
+            while(stack.peek().val >= strength[i]) {
+                Entity pop = stack.pop();
+                int right = i - pop.index;
+                int left = arr[pop.index];
+                total += strength[pop.index] * sum(strength, pop.index, left, right);
+                total = total % mod;
+            }
+            
+            Entity top = stack.peek();
+            stack.push(new Entity(strength[i], i));
+            int left = i - top.index;
+            arr[i] += left;
+        }
+        
+        while(stack.size() != 1) {
+            Entity pop = stack.pop();
+            int right = n - pop.index;
+            int left = arr[pop.index];
+            total += (strength[pop.index] * sum(strength, pop.index, left, right));
+            total = total % mod;
+        }
+        
+        return (int)total;
+    }
+    
+    long sum(int[] arr, int index, int left, int right) {
+        long sum = 0;
+        for (int i = index - left + 1; i < index; i ++) {
+            sum += arr[i] * Math.abs(index - left - i) * right;
+        }
+        
+        for (int i = index + 1; i < index + right; i ++) {
+            sum += arr[i] * (index + right - i) * left;
+        }
+        
+        sum += arr[index] * right * left;
+        return sum;
+    }
+}
