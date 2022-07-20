@@ -32,3 +32,53 @@ class Solution {
         return size;
     }
 }
+
+
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length == 1) return 1;
+        int n = nums.length;
+        int[] newArr = new int[n + 2];
+        int[] endOf = new int[n + 3];
+        newArr[0] = Integer.MIN_VALUE;
+        newArr[n + 1] = Integer.MAX_VALUE;
+        for (int i = 1; i <= n; i ++) {
+            newArr[i] = nums[i - 1];
+        }
+        int[] dp = new int[n + 2];
+        dp[0] = 1;
+        int[] pre = new int[n + 2];
+        int longest = 1;
+        endOf[1] = 0;
+        for (int i = 1; i <= n + 1; i ++) {
+
+            int left = 1;
+            int right = longest + 1;
+            while(left < right) {
+                int middle = (left + right)/2;
+                if (newArr[endOf[middle]] < newArr[i]) {
+                    left = middle + 1;
+                } else {
+                    right = middle;
+                }
+            }
+
+            int pos = endOf[left - 1];
+
+
+            dp[i] = dp[pos] + 1;
+            pre[i] = pos;
+
+            if (dp[i] > longest) {
+                endOf[dp[i]] = i;
+                longest = dp[i];
+            } else {
+                if (newArr[i] < newArr[endOf[dp[i]]]) {
+                    endOf[dp[i]] = i;
+                }
+            }
+        }
+
+        return dp[n + 1] - 2;
+    }
+}
