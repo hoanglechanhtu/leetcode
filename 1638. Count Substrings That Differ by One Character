@@ -1,0 +1,19 @@
+class Solution {
+    public int countSubstrings(String s, String t) {
+        int total = 0;
+        for (int i = 0; i < s.length(); i ++) {
+            for (int j = 0; j < t.length(); j ++) {
+                int miss = 0;
+                for (int length = 1; i + length - 1 < s.length() && j + length - 1 < t.length(); length ++) {
+                    if (s.charAt(i + length - 1) != t.charAt(j + length - 1)) {
+                        miss ++;
+                        if (miss > 1) break;
+                    }
+                    
+                    if (miss == 1) total ++;
+                }
+            }
+        }
+        return total;
+    }
+}
