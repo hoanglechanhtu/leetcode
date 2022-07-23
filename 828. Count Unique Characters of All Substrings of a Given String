@@ -1,0 +1,26 @@
+class Solution {
+    public int uniqueLetterString(String s) {
+        char[] arr = s.toCharArray();
+        int total = 0;
+        for (int i = 0; i < s.length(); i ++) {
+            int[] charCount = new int[26];
+            int cur = 1;
+            total += 1;
+            charCount[arr[i] - 'A'] += 1;
+            for (int j = i + 1; j < s.length(); j ++) {
+                if (charCount[arr[j] - 'A'] == 0) {
+                    cur ++;
+                } else {
+                    if (charCount[arr[j] - 'A'] == 1){
+                        cur --;
+                    }
+                }
+                charCount[arr[j] - 'A'] ++;
+                
+                total += cur;
+            }
+            
+        }
+        return total;
+    }
+}
