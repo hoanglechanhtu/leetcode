@@ -1,0 +1,57 @@
+class Solution {
+    public long appealSum(String s) {
+        int n = s.length();
+        char[] arr = s.toCharArray();
+        int total = 0;
+        for (int i = 0; i < n; i ++) {
+            for (int j = i + 1; j <= n; j ++) {
+                total += getDistinct(s, i, j);
+            }
+        }
+        
+        return total;
+    }
+    
+    int getDistinct(String s, int start, int end) {
+        int total = 0;
+        int[] map = new int[26];
+        for (int i = start; i < end; i ++) {
+            if (map[s.charAt(i) - 'a'] == 0) {
+                total ++;
+            }
+            map[s.charAt(i) - 'a'] ++;
+        }
+        return total;
+    }
+}
+
+class Solution {
+    public long appealSum(String s) {
+        int n = s.length();
+        char[] arr = s.toCharArray();
+        int[] rightRange = new int[n];
+        int[] charMap = new int[26];
+        Arrays.fill(charMap, - 1);
+        
+        for (int i = 0; i < n; i ++) {
+            if (charMap[arr[i] - 'a'] != -1) {
+                rightRange[charMap[arr[i] - 'a']] = i - charMap[arr[i] - 'a'] - 1;
+            }
+            charMap[arr[i] - 'a'] = i;
+        }
+        
+        for(int i = 0; i < 26; i ++) {
+            if (charMap[i] != -1) {
+                rightRange[charMap[i]] = n - charMap[i] - 1;
+            }
+        }
+        
+        long total = 0;
+        for (int i = 0; i < n; i ++) {
+            
+            total += 1 + i * rightRange[i] + i + rightRange[i];
+        }
+        
+        return total;
+    }
+}
