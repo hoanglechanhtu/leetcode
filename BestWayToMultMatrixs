@@ -1,0 +1,40 @@
+package org.example.listed;
+
+public class MultiplyMatrix {
+    //matrix
+    //input arr
+    //a1 a2 a3 a4 a5 a6 a7
+    //number of matrix = arr.length - 1
+    //matrix1 = a1 * a2
+    //matrix2 = a2 * a3
+    //matrixn = an * an+1
+    public void solution(int[] arr) {
+        int n = arr.length - 1;
+        int[][] dp = new int[n][n];
+        for (int i = 0; i < n; i ++) {
+            for (int j = 0; j < n; j ++) {
+                if (i == j) {
+                    dp[i][j] = 0;
+                } else {
+                    dp[i][j] = Integer.MAX_VALUE;
+                }
+            }
+        }
+
+        for (int length = 2; length <= n; length ++) {
+            for(int i = 0; i < n - length + 1; i ++) {
+                int j = i + length - 1;
+                int min = Integer.MAX_VALUE;
+                for (int k = i; k < j; k ++) {
+                    int first = arr[i];
+                    int middle = arr[k + 1];
+                    int last = arr[j + 1];
+                    min = Math.min(min, first * middle * last + dp[i][k] + dp[k + 1][j]);
+                }
+                dp[i][j] = min;
+            }
+        }
+
+        System.out.println(dp[0][n-1]);
+    }
+}
