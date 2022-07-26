@@ -19,3 +19,66 @@ class Solution {
         return max;
     }
 }
+
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int n = nums.length;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i ++) {
+           int curSum = 0;
+           for (int j = i; j < n; j ++) {
+               curSum += nums[j];
+               max = Math.max(max, curSum);
+           }
+        }
+        return max;
+    }
+}
+
+class Solution {
+    public int maxSubArray(int[] nums) {
+        return findBestSubArray(nums, 0, nums.length - 1);
+    }
+    
+    int findBestSubArray(int[] nums, int left, int right) {
+        if (left > right) return Integer.MIN_VALUE;
+        
+        int middle = (left + right)/2;
+        
+        int curSum = 0;
+        int maxRightSum = 0;
+        for (int i = middle + 1; i <= right; i ++) {
+            curSum += nums[i];
+            maxRightSum = Math.max(maxRightSum, curSum);
+        }
+        
+        curSum = 0;
+        int maxLeftSum = 0;
+        for (int i = middle - 1; i >= left; i --) {
+            curSum += nums[i];
+            maxLeftSum = Math.max(maxLeftSum, curSum);
+        }
+        
+        int sum = nums[middle] + maxRightSum + maxLeftSum;
+        
+        int leftSum = findBestSubArray(nums, left, middle - 1);
+        int rightSum = findBestSubArray(nums, middle + 1, right);
+        
+        return Math.max(Math.max(leftSum, rightSum), sum);
+    }
+}
+
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int max = nums[0];
+        int cur = 0;
+        for (int i = 0; i < nums.length; i ++) {
+            cur += nums[i];
+            max = Math.max(max, cur);
+            if (cur < 0) {
+                cur = 0;
+            }
+        }
+        return max;
+    }
+}
