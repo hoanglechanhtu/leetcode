@@ -1,0 +1,58 @@
+class Solution {
+    public int maxAbsoluteSum(int[] nums) {
+        int n = nums.length;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i ++) {
+            int sum = 0;
+            for (int j = i; j < n; j ++) {
+                sum += nums[j];
+                max = Math.max(max, Math.abs(sum));
+            }
+        }
+        return max;
+    }
+}
+
+
+//WRONG??
+class Solution {
+    public int maxAbsoluteSum(int[] nums) {
+        int sum = 0;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i ++) {
+            if (Math.abs(nums[i]) >= Math.abs(nums[i] + sum)) {
+                sum = nums[i];
+            } else {
+                sum += nums[i];
+            }
+            max = Math.max(max, Math.abs(sum));
+        }
+        
+        return max;
+    }
+}
+
+class Solution {
+    public int maxAbsoluteSum(int[] nums) {
+        int sum = 0;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i ++) {
+            sum += nums[i];
+            if (sum < 0) {
+                sum = 0;
+            }
+            max = Math.max(max, sum);
+        }
+        
+        int min = Integer.MAX_VALUE;
+        sum = 0;
+        for (int i = 0; i < nums.length; i ++) {
+            sum += nums[i];
+            if (sum > 0) {
+                sum = 0;
+            }
+            min = Math.min(min, sum);
+        }
+        return Math.max(Math.abs(max), Math.abs(min));
+    }
+}
