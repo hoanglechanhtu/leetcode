@@ -1,0 +1,41 @@
+/*
+At first, try to solve using brute force approach.
+We can traverse every available swap (i: 0 -> n, j: 0 -> n) and calculate the difference using prefix sum.
+So it is O(n^2)
+-> we try to think about O(n) approach.
+we have to iterate one time, and also keep track of the maximum sum, it feel like a largest subarray problem, we terminate the current subaaray by a condition
+what condition we can use here?
+we can see, every replace, if the difference bw without replace and with replace < 0, it mean if we keep current range, it only decrease our total, so we can 
+reset the range here, start with new range 
+*/
+
+class Solution {
+    public int maximumsSplicedArray(int[] nums1, int[] nums2) {
+        int sums1 = 0, sums2 = 0;
+        int n = nums1.length;
+        for (int i = 0; i < n; i ++) {
+            sums1 += nums1[i];
+            sums2 += nums2[i];
+        }
+        int max = 0;
+        
+        max = Math.max(sums1 + maxDiff(nums1, nums2), max);
+        max = Math.max(sums2 + maxDiff(nums2, nums1), max);
+        return max;
+    }
+    
+    int maxDiff(int[] nums1, int[] nums2) {
+        int max = 0;
+        int cur = 0;
+        int n = nums1.length;
+        for (int i = 0; i < n; i ++) {
+            cur += nums2[i] - nums1[i];
+            if (cur < 0) {
+                cur = 0;
+            }
+            max = Math.max(cur, max);
+        }
+        
+        return max;
+    }
+}
