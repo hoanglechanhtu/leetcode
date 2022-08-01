@@ -1,0 +1,71 @@
+class Solution {
+    public int largestVariance(String s) {
+        int n = s.length();
+        int ret = 0;
+        for (int start = 0; start < n; start ++) {
+            int[] map = new int[26];
+            for (int end = start; end < n; end ++) {
+                map[s.charAt(end) - 'a'] ++;
+                int min = Integer.MAX_VALUE;
+                int max = Integer.MIN_VALUE;
+                for (int i = 0; i < 26; i ++) {
+                    if (map[i] == 0) continue;
+                    min = Math.min(min, map[i]);
+                    max = Math.max(max, map[i]);
+                }
+                ret = Math.max(ret, max - min);
+            }
+        }
+        return ret;
+    }
+}
+
+class Solution {
+    public int largestVariance(String s) {
+        int n = s.length();
+        int ret = 0;
+        int[] arr = new int[26];
+        for (int i = 0; i < n; i ++) {
+            arr[s.charAt(i) - 'a'] ++;
+        }
+        for (int a = 0; a < 26; a ++) {
+            for (int b = 0; b < 26; b ++) {
+                int remainAFre = arr[a];
+                int curAFre = 0;
+                int curBFre = 0;
+                for (int i = 0; i < n; i ++) {
+                    int c = s.charAt(i) - 'a';
+                    if (c == a) {
+                        curAFre ++;
+                        remainAFre --;
+                    }
+                    
+                    if (c == b) {
+                        curBFre ++;
+                    }
+                    
+                    if (curAFre > 0) {
+                        ret = Math.max(ret, curBFre - curAFre);
+                    }
+                    
+                    /*
+                    we should reset counters only when there must be atleast one 'a' remaning and freqB<freqA. Example:
+|
+a b b b
+
+b: 0
+a: 1
+
+Here we should not reset(hence remainingA>=1), if we do reset, that won't be valid answer.
+                    */
+                    if (curBFre < curAFre && remainAFre > 0) {
+                        curBFre = 0;
+                        curAFre = 0;
+                    }
+                }
+            }
+        }
+        
+        return ret;
+    }
+}
