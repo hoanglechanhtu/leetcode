@@ -38,3 +38,24 @@ class Solution {
         return total;
     }
 }
+
+
+class Solution {
+    public int findTargetSumWays(int[] nums, int target) {
+        int n = nums.length;
+        int[][] dp = new int[n + 1][10000];
+        dp[0][2000] = 1;
+        for (int i = 1; i <= n; i ++) {
+            if (nums[i - 1] == 0 ){
+                dp[i][2000] = 1;
+            }
+        }
+        for (int i = 1; i <= n; i ++) {
+            for (int t = 1000; t <= 3000; t ++) {
+                dp[i][t] = dp[i - 1][t - nums[i - 1]] + dp[i - 1][t + nums[i - 1]];
+            }
+        }
+        
+        return dp[n][2000 + target];
+    }
+}
