@@ -1,0 +1,40 @@
+class Solution {
+    public String[] reorderLogFiles(String[] logs) {
+        int n = logs.length;
+        String[] res = new String[n];
+        List<String> letterLogs = new ArrayList<>();
+        List<String> digitLogs = new ArrayList<>();
+        for (int i = 0; i < n; i ++) {
+            int index = logs[i].charAt(logs[i].length() - 1) - '0';
+            if (index >= 0 && index <= 9) {
+                digitLogs.add(logs[i]);
+            } else {
+                letterLogs.add(logs[i]);
+            }
+        }
+        Collections.sort(letterLogs, (x, y) -> {
+            int firstXSplit = x.indexOf(" ");
+            int firstYSplit = y.indexOf(" ");
+            
+            String xIdentifier = x.substring(0, firstXSplit);
+            String yIdentifier = y.substring(0, firstYSplit);
+            String xLog = x.substring(firstXSplit + 1);
+            String yLog = y.substring(firstYSplit + 1);
+            
+            if (xLog.equals(yLog)) {
+                return xIdentifier.compareTo(yIdentifier);
+            } else {
+                return xLog.compareTo(yLog);
+            }
+        });
+        for (int i = 0; i < n; i ++) {
+            if (i < letterLogs.size()) {
+                res[i] = letterLogs.get(i);
+            } else {
+                res[i] = digitLogs.get(i - letterLogs.size());
+            }
+        }
+        
+        return res;
+    }
+}
