@@ -1,0 +1,29 @@
+class Solution {
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        int n = products.length;
+        Arrays.sort(products);
+        List<List<String>> res = new ArrayList<>();
+        for (int l = 1; l <= searchWord.length(); l ++) {
+            String key = searchWord.substring(0, l);
+            int left = 0;
+            int right = n - 1;
+            while(left < right) {
+                int middle = (left + right)/2;
+                if(products[middle].compareTo(key) >= 0) {
+                    right = middle;
+                } else {
+                    left = middle + 1;
+                }
+            }
+            List<String> cur = new ArrayList<>();
+            for (int i = left; i < left + 3 && i < n; i ++) {
+                if (products[i].length() >= l && products[i].substring(0, l).equals(key)) {
+                    cur.add(products[i]); 
+                }
+            }
+            res.add(cur);
+        }
+        
+        return res;
+    }
+}
