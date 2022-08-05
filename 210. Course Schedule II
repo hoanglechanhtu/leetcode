@@ -1,0 +1,80 @@
+class Solution {
+    Map<Integer, List<Integer>> map;
+    boolean[] isVisited;
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        map = new HashMap<>();
+        int n = prerequisites.length;
+        for (int i = 0; i < n; i ++) {
+            map.putIfAbsent(prerequisites[i][0], new ArrayList<>());
+            map.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        }
+        isVisited = new boolean[numCourses];
+        if (!canFinish(numCourses, prerequisites)) {
+            return new int[0];
+        }
+        
+        isVisited = new boolean[numCourses];
+        List<Integer> res = new ArrayList<>();
+        
+        for (int i = 0; i < numCourses; i ++) {
+            if (!isVisited[i]) {
+                helper(i, map, res);
+            }
+        }
+        
+        int[] arr = new int[numCourses];
+        for (int i = 0; i < numCourses; i ++) {
+            arr[i] = res.get(i);
+        }
+        return arr;
+    }
+    
+    
+    void helper(int index, Map<Integer, List<Integer>> map, List<Integer> res) {
+        List<Integer> list = map.get(index);
+        isVisited[index] = true;
+        if (list == null) {
+            res.add(index);
+            return;
+        }
+        for (int i = 0; i < list.size(); i ++) {
+            if (!isVisited[list.get(i)]) {
+                helper(list.get(i), map, res);
+            }
+        }
+        res.add(index);
+    }
+    
+    
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        
+        for (int i = 0; i < numCourses; i ++) {
+            Set<Integer> current = new HashSet<>();
+            if (visit(i, current) == false) {
+                return false;
+            }
+        }
+        
+        return true;
+        
+    }
+    
+    boolean visit(int index, Set<Integer> current) {
+        if (current.contains(index)) {
+            return false;
+        }
+        if (isVisited[index]) return true;
+        isVisited[index] = true;
+        List<Integer> list = map.get(index);
+        if (list == null) return true;
+        current.add(index);
+        for (int i = 0; i < list.size(); i ++) {
+            if (visit(list.get(i), current) == false) {
+                return false;
+            }
+        }
+        current.remove(index);
+        return true;
+    }
+}
