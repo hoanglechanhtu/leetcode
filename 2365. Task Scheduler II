@@ -1,0 +1,25 @@
+class Solution {
+    public long taskSchedulerII(int[] tasks, int space) {
+        Map<Long, Long> map = new HashMap<>();
+        int n = tasks.length;
+        long day = 1;
+        for (int i = 0; i < n; i ++) {
+            if (map.containsKey((long)tasks[i])) {
+                if (day - map.get((long)tasks[i]) > space) {
+                    map.put((long)tasks[i], day);
+                    day ++;
+                } else {
+                    day = map.get((long)tasks[i]) + space + 1;
+                    map.put((long)tasks[i], day);
+                    day ++;
+                }
+            } else {
+                //update task timing
+                map.put((long)tasks[i], day);
+                day ++;
+            }
+        }
+        
+        return day - 1;
+    }
+}
