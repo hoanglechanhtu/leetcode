@@ -1,0 +1,17 @@
+class Solution {
+    public long minimumReplacement(int[] nums) {
+        int n = nums.length;
+        int curMin = nums[n - 1];
+        long total = 0;
+        for (int i = n - 2; i >= 0; i --) {
+            if (nums[i] > curMin) {
+                int nOper = (nums[i] - 1)/curMin;
+                total += nOper;
+                curMin = nums[i] / (nOper + 1);
+            } else {
+                curMin = nums[i];
+            }
+        }
+        return total;
+    }
+}
