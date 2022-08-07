@@ -1,0 +1,37 @@
+class Solution {
+    int total = 0;
+    boolean[] visited;
+    public int reachableNodes(int n, int[][] edges, int[] restricted) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        Set<Integer> restrictedSet = new HashSet<>();
+        for (int i = 0; i < restricted.length; i ++) {
+            restrictedSet.add(restricted[i]);
+        }
+        int nEdges = edges.length;
+        for (int i = 0; i < nEdges; i ++) {
+            map.putIfAbsent(edges[i][0], new ArrayList<>());
+            map.get(edges[i][0]).add(edges[i][1]);
+            
+            map.putIfAbsent(edges[i][1], new ArrayList<>());
+            map.get(edges[i][1]).add(edges[i][0]);
+        }
+        
+        visited = new boolean[n];
+        visit(0, map, restrictedSet);
+        
+        return total;
+    }
+    
+    void visit(int index, Map<Integer, List<Integer>> map, Set<Integer> restrictedSet) {
+        total ++;
+        visited[index] = true;
+        List<Integer> neighbors = map.get(index);
+        if (neighbors == null) return;
+        
+        for (int i = 0; i < neighbors.size(); i ++) {
+            if (!visited[neighbors.get(i)] && !restrictedSet.contains(neighbors.get(i))) {
+                visit(neighbors.get(i), map, restrictedSet);
+            }
+        }
+    }
+}
