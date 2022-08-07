@@ -1,0 +1,17 @@
+class Solution {
+    public int arithmeticTriplets(int[] nums, int diff) {
+        int total = 0;
+        int n = nums.length;
+        int[] newNums = new int[201];
+        for (int i = 0; i < n; i ++) {
+            newNums[nums[i]] ++;
+        }
+        
+        for (int i = 0; i < 201; i ++) {
+            if (i + 2 * diff < 201 && newNums[i] != 0 && newNums[i + diff] != 0 && newNums[i + 2 * diff] != 0) {
+                total ++;
+            }
+        }
+        return total;
+    }
+}
