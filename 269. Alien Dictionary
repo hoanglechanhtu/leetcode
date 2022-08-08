@@ -1,0 +1,122 @@
+There is a new alien language that uses the English alphabet. However, the order among the letters is unknown to you.
+
+You are given a list of strings words from the alien language's dictionary, where the strings in words are sorted lexicographically by the rules of this new language.
+
+Return a string of the unique letters in the new alien language sorted in lexicographically increasing order by the new language's rules. If there is no solution, return "". If there are multiple solutions, return any of them.
+
+A string s is lexicographically smaller than a string t if at the first letter where they differ, the letter in s comes before the letter in t in the alien language. If the first min(s.length, t.length) letters are the same, then s is smaller if and only if s.length < t.length.
+
+ 
+
+Example 1:
+
+Input: words = ["wrt","wrf","er","ett","rftt"]
+Output: "wertf"
+Example 2:
+
+Input: words = ["z","x"]
+Output: "zx"
+Example 3:
+
+Input: words = ["z","x","z"]
+Output: ""
+Explanation: The order is invalid, so return "".
+ 
+
+Constraints:
+
+1 <= words.length <= 100
+1 <= words[i].length <= 100
+words[i] consists of only lowercase English letters.
+
+class Solution {
+    Set<Integer>[] map;
+    StringBuilder builder = new StringBuilder();
+    public String alienOrder(String[] words) {
+        map = new Set[26];
+        for (int i = 0; i < 26; i ++) {
+            map[i] = new HashSet<>();
+        }
+        int n = words.length;
+        int[] count = new int[26];
+        for (int i = 0; i < n; i ++) {
+            for (int j = 0; j < words[i].length(); j ++) {
+                count[words[i].charAt(j) - 'a'] ++; 
+            }
+        }
+        
+        for (int i = 0; i < n - 1; i ++) {
+            String cur = words[i];
+            String next = words[i + 1];
+            for (int j = 0; j < cur.length(); j ++) {
+                if (j >= next.length()) {
+                    return "";
+                }
+                if (cur.charAt(j) != next.charAt(j)) {
+                    map[next.charAt(j) - 'a'].add(cur.charAt(j) - 'a');
+                    break;
+                }
+            }
+        }
+        
+        if (!isValid()) {
+            return "";
+        }
+        boolean[] free = new boolean[26];
+
+        Arrays.fill(free, true);
+        for (int i = 0; i < 26; i ++) {
+            if (count[i] != 0 && free[i]) {
+                helper(i, free);
+            }
+        }
+        
+        return builder.toString();
+    }
+    
+    void helper(int index, boolean[] free) {
+        List<Integer> list = new ArrayList<>(map[index]);
+        free[index] = false;
+        for (int i = 0; i < list.size(); i ++) {
+            if (free[list.get(i)]) {
+                helper(list.get(i), free);
+            }
+        }
+        
+        builder.append((char)('a' + index));
+    }    
+    boolean isValid() {
+        boolean[] free = new boolean[26];
+        Arrays.fill(free, true);
+        for (int i = 0; i < 26; i ++) {
+            if(free[i]) {
+                Set<Integer> set = new HashSet<>();
+                if (!visit(i, set, free)) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    boolean visit(int i, Set<Integer> set, boolean[] free) {
+        if (set.contains(i)) {
+            return false;
+        }
+        if (!free[i]) {
+            return true;
+        }
+        
+        free[i] = false;
+        set.add(i);
+        List<Integer> adj = new ArrayList<>(map[i]);
+        for (int k = 0; k < adj.size(); k ++) {
+            if (!visit(adj.get(k), set, free)) {
+                return false;
+            }
+        }
+        set.remove(i);
+        return true;
+    }
+}
