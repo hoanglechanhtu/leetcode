@@ -1,0 +1,40 @@
+class Solution {
+    //left, right, bottom, up
+    int[][] direction = new int[][]{{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+    int mod = 1000000007;
+    public int countPaths(int[][] grid) {
+        long total = 0;
+        int m = grid.length;
+        int n = grid[0].length;
+        long[][] dp = new long[m][n];
+        for (int i = 0; i < m; i ++) {
+            Arrays.fill(dp[i], -1);
+        }
+        
+        for (int i = 0; i < m; i ++) {
+            for (int j = 0; j < n; j ++) {
+                dfs(i, j, grid, dp);
+                total = (total + dp[i][j]) % mod;
+            }
+        }
+        
+        return (int)total % mod;
+    }
+    
+    long dfs(int x, int y, int[][] grid, long[][] dp) {
+        if (dp[x][y] != -1) {
+            return dp[x][y];
+        }
+        long total = 1;
+        for (int i = 0; i < direction.length; i ++) {
+            int dx = direction[i][0];
+            int dy = direction[i][1];
+            if (x + dx >= 0 && x + dx < grid.length && y + dy >= 0 && y + dy < grid[0].length && grid[x][y] < grid[x + dx][y + dy]) {
+                total = (total + (dfs(x + dx, y + dy, grid, dp) % mod)) % mod;
+            }
+            
+        }     
+        dp[x][y] = total;
+        return total;
+    }
+}
