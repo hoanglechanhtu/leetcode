@@ -36,3 +36,45 @@ class Solution {
         return cache[node][mask];
     }
 }
+
+
+class Solution {
+    public int shortestPathLength(int[][] graph) {
+        
+        if (graph.length == 1) return 0;
+        int n = graph.length;
+        Queue<int[]> queue = new ArrayDeque<>();
+        int endingMask = (1 << n) - 1;
+        boolean[][] seen = new boolean[n][endingMask];
+        
+        for (int i = 0; i < n; i ++) {
+            queue.add(new int[]{i, 1 << i});
+            seen[i][1 << i] = true;
+        }
+        int step = 0;
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i ++) {
+                int[] cur = queue.poll();
+                int node = cur[0];
+                int mask = cur[1];
+                
+                for (int neighbor: graph[node]) {
+                    int nextMask = mask | (1 << neighbor);
+                    
+                    if (nextMask == endingMask) {
+                        return 1 + step;
+                    } 
+                
+                    if (!seen[neighbor][nextMask]) {
+                        queue.add(new int[]{neighbor, nextMask});
+                        seen[neighbor][nextMask] = true;
+                    }
+                }
+            }
+            step ++;
+        }
+        
+        return step;
+    }
+}
