@@ -1,0 +1,75 @@
+class Solution {
+    //left right bottom up
+    int[][] move = new int[][]{{0, -1}, {0, 1}, {1, 0}, {-1, 0}};
+    int mod = 1000000007;
+    long[][][] memo;
+    public int findPaths(int m, int n, int maxMove, int startRow, int startColumn) {
+        memo = new long[m][n][maxMove + 1];
+        for (int i = 0; i < m; i ++) {
+            for (int j = 0; j < n; j ++) {
+                Arrays.fill(memo[i][j], -1);
+            }
+        }
+        return (int)(dfs(startRow, startColumn, m, n, maxMove) % mod);
+    }
+    
+    long dfs(int x, int y, int m, int n, int remainMove) {
+        if (x < 0 || y < 0 || x == m || y == n) {
+            return 1;
+        }
+        if (memo[x][y][remainMove] != -1) {
+            return memo[x][y][remainMove];
+        }
+        long res = 0;
+        if (remainMove > 0) {
+            for (int i = 0; i < move.length; i ++) {
+                int dx = move[i][0];
+                int dy = move[i][1];
+                res = (res % mod + dfs(x + dx, y + dy, m, n, remainMove - 1) % mod) % mod;
+            }
+        }
+        memo[x][y][remainMove] = res;
+        return res;
+    }
+}
+
+
+class Solution {
+    int[][] move = new int[][]{{0, -1}, {0, 1}, {1, 0}, {-1, 0}};
+    int mod = 1000000007;
+    public int findPaths(int m, int n, int maxMove, int startRow, int startColumn) {
+        int[][] dp = new int[m][n];
+        int total = 0;
+        int[][] temp = new int[m][n];
+        
+        dp[startRow][startColumn] = 1;
+        for (int nMove = 1; nMove <= maxMove; nMove ++) {
+            for (int i = 0; i < m; i ++) {
+                for (int j = 0; j < n; j ++) {
+                    if (i == 0) {
+                        total = (total + dp[i][j]) % mod; 
+                    }
+                    if (i == m - 1) {
+                        total = (total + dp[i][j]) % mod; 
+                    }
+                    if (j == 0) {
+                        total = (total + dp[i][j]) % mod; 
+                    }
+                    if (j == n - 1) {
+                        total = (total + dp[i][j]) % mod; 
+                    }
+                    for (int k = 0; k < move.length; k ++) {
+                        int x = i + move[k][0];
+                        int y = j + move[k][1];
+                        if (x >= 0 && x < m && y >= 0 && y < n) {
+                            temp[i][j] = (temp[i][j] + dp[x][y]) % mod;
+                        }
+                    }
+                }
+            }
+            dp = temp;
+            temp = new int[m][n];
+        }
+        return total;
+    }
+}
