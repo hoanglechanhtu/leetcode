@@ -1,0 +1,43 @@
+class Solution {
+    List<String> res;
+    public List<String> findItinerary(List<List<String>> tickets) {
+        int n = tickets.size();
+        Collections.sort(tickets, Comparator.comparing(list -> list.get(1)));
+        Map<String, List<String>> map = new HashMap<>();
+        
+        for (int i = 0; i < n; i ++) {
+            String from = tickets.get(i).get(0);
+            String to = tickets.get(i).get(1);
+            map.putIfAbsent(from, new ArrayList<>());
+            map.get(from).add(to);
+        }
+        List<String> cur = new ArrayList<>();
+        cur.add("JFK");
+        tryWith(0, "JFK", map, n, cur);
+        return res;
+    }
+    
+    boolean tryWith(int index, String from, Map<String, List<String>> map, int n, List<String> cur) {
+        if (index == n) {
+            res = new ArrayList<>(cur);
+            return true;
+        }
+        
+        List<String> nexts = map.get(from);
+        if (nexts == null) {
+            return false;
+        }
+        for (int i = 0; i < nexts.size(); i ++) {
+            String to = nexts.get(i);
+            nexts.remove(i);
+            cur.add(to);
+            if (tryWith(index + 1, to, map, n, cur)) {
+                return true;
+            }
+            nexts.add(i, to);
+            cur.remove(cur.size() - 1);
+        }
+        
+        return false;
+    }
+}
