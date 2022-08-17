@@ -1,0 +1,48 @@
+class Solution {
+    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < n; i ++) {
+            map.put(i, new ArrayList<>());
+        }
+        for (int i = 0; i < connections.size(); i ++) {
+            List<Integer> cur = connections.get(i);
+            map.get(cur.get(0)).add(cur.get(1));
+            map.get(cur.get(1)).add(cur.get(0));
+        }
+        List<List<Integer>> res = new ArrayList<>();
+        int[] ranks = new int[n];
+        Arrays.fill(ranks, -1);
+        dfs(0, 0, map, ranks);
+        for(Integer key: map.keySet()) {
+            List<Integer> cur = map.get(key);
+            for (Integer to: cur) {
+                res.add(Arrays.asList(key, to));
+            }
+        }
+        
+        return res;
+        
+    }
+    
+    int dfs(int current, int depth, Map<Integer, List<Integer>> map, int[] ranks) {
+        
+        int rank = depth;
+        ranks[current] = rank;
+        List<Integer> nexts = new ArrayList<>(map.get(current));
+        for(Integer next: nexts) {
+            int nextRank = ranks[next];
+            if (nextRank == -1) {
+                map.get(next).remove(Integer.valueOf(current));
+                nextRank = dfs(next, depth + 1, map, ranks);
+            }
+            if (depth >= nextRank) {
+                map.get(current).remove(next);
+                map.get(next).remove(Integer.valueOf(current));
+                rank = Math.min(rank, nextRank);
+            }
+        }
+        ranks[current] = rank;
+        return rank;
+    }
+    
+}
