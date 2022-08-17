@@ -1,0 +1,42 @@
+class Solution {
+    public int longestCommonSubpath(int n, int[][] paths) {
+        int low = 0;
+        int high = Integer.MAX_VALUE;
+        for (int i = 0; i < paths.length; i ++) {
+            high = Math.min(high, paths[i].length);
+        }
+        high = high + 1;
+        
+        while(low < high) {
+            int middle = low + (high - low)/2;
+            if (check(middle, paths)) {
+                low = middle + 1;
+            } else {
+                high = middle;
+            }
+        }
+        
+        return low - 1;
+    }
+    
+    boolean check(int length, int[][] paths) {
+        Set<String> seen = new HashSet<>();
+        Set<String> temp = new HashSet<>();
+        int[] arr = paths[0];
+        for (int i = 0; i <= arr.length - length; i ++) {
+            seen.add(Arrays.toString(Arrays.copyOfRange(arr, i, i + length)));
+        }
+        for (int j = 1; j < paths.length; j ++) {
+            int[] curs = paths[j];
+            for (int i = 0; i <= curs.length - length; i ++) {
+                if (seen.contains(Arrays.toString(Arrays.copyOfRange(curs, i, i + length)))) {
+                    temp.add(Arrays.toString(Arrays.copyOfRange(curs, i, i + length)));
+                }
+            }
+            seen = temp;
+            temp = new HashSet<>();
+        }
+        
+        return !seen.isEmpty();
+    }
+}
