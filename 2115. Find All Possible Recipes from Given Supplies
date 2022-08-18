@@ -1,0 +1,46 @@
+class Solution {
+    public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
+        List<String> res = new ArrayList<>();
+        Map<String, Boolean> memo = new HashMap<>();
+        Map<String, List<String>> map = new HashMap<>();
+        for (int i = 0; i < recipes.length; i ++) {
+            map.put(recipes[i], ingredients.get(i));
+        }
+        for (String supplie: supplies) {
+            memo.put(supplie, true);
+        }
+        for (String recipe : recipes) {
+            if (memo.get(recipe) != null && memo.get(recipe)) {
+                res.add(recipe);
+            } else if (canMake(recipe, map, memo, new HashSet<>())) {
+                res.add(recipe);
+            }
+        }
+        return res;
+    }
+    
+    boolean canMake(String recipe, Map<String, List<String>> ingredients, Map<String, Boolean> memo, Set<String> visited) {
+        if (memo.containsKey(recipe)) {
+            return memo.get(recipe);
+        }
+
+        List<String> ingredient = ingredients.get(recipe);
+        if (ingredient == null) {
+            return false;
+        }
+        
+        boolean res = true;
+        if (visited.contains(recipe)) {
+            res = false;
+        }
+        visited.add(recipe);
+        for(String temp: ingredient) {
+            if (res) {
+                res = res && canMake(temp, ingredients, memo, visited);
+            }
+        }
+        memo.put(recipe, res);
+        visited.remove(recipe);
+        return res;
+    }
+}
