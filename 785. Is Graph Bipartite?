@@ -1,0 +1,34 @@
+
+class Solution {
+    public boolean isBipartite(int[][] graph) {
+        int n = graph.length;
+        int[] arr = new int[n];
+        Arrays.fill(arr, -1);
+        Queue<Integer> queue = new ArrayDeque<>();
+        for (int k = 0; k < n; k++) {
+            if (arr[k] != -1) {
+                continue;
+            }
+            queue.add(k);
+            arr[k] = 0;
+            int level = 0;
+            while (!queue.isEmpty()) {
+                int size = queue.size();
+                level = level + 1;
+                for (int i = 0; i < size; i++) {
+                    int cur = queue.poll();
+                    for (int m : graph[cur]) {
+                        if (arr[m] == -1) {
+                            arr[m] = level % 2;
+                            queue.add(m);
+                        } else if (arr[m] != level % 2) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+}
