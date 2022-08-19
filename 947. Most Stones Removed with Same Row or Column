@@ -1,0 +1,41 @@
+class Solution {
+    boolean[][] visited;
+    public int removeStones(int[][] stones) {
+        int maxX = 0;
+        int maxY = 0;
+        for (int i = 0; i < stones.length; i ++) {
+            maxX = Math.max(maxX, stones[i][0]);
+            maxY = Math.max(maxY, stones[i][1]);
+        }
+        visited = new boolean[maxX + 1][maxY + 1];
+        int res = 0;
+        for (int i = 0; i < stones.length; i ++) {
+            if (!visited[stones[i][0]][stones[i][1]]) {
+                visited[stones[i][0]][stones[i][1]] = true;
+                res += dfs(stones[i][0], stones[i][1], stones, 0);
+            }
+        }
+        
+        return res;
+    }
+    
+    int dfs(int x, int y, int[][] stones, int step) {
+        
+        int total = step == 0 ? 0 : 1;
+        for (int i = 0; i < stones.length; i ++) {
+            int nextX = stones[i][0];
+            int nextY = stones[i][1];
+            //same row
+            if (nextX == x && nextY!= y && !visited[nextX][nextY]) {
+                visited[nextX][nextY] = true;
+                total += dfs(nextX, nextY, stones, step + 1);
+            }
+            if (nextX != x && nextY == y && !visited[nextX][nextY]) {
+                visited[nextX][nextY] = true;
+                total += dfs(nextX, nextY, stones, step + 1);
+            }
+        }
+        
+        return total; 
+    }
+}
