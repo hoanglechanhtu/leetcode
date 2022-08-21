@@ -1,0 +1,28 @@
+class Solution {
+    public int minimumRecolors(String blocks, int k) {
+        int n = blocks.length();
+        char[] arr = blocks.toCharArray();
+        int total = 0;
+        int min = Integer.MAX_VALUE;
+        int nOp = 0;
+        int left = -1;
+        for (int right = 0; right < n; right ++) {
+            if (arr[right] == 'B') {
+                total ++;
+            } else {
+                nOp ++;
+                total ++;
+            }
+            if (total == k) {
+                min = Math.min(min, nOp);
+                left ++;
+                if (arr[left] == 'W') {
+                    nOp --;
+                }
+                total --;
+            }
+        }
+        
+        return min;
+    }
+}
