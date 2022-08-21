@@ -1,0 +1,40 @@
+class Solution {
+    public String shiftingLetters(String s, int[][] shifts) {
+        int n = s.length();
+        int[] diff = new int[n + 1];
+        for (int i = 0; i < shifts.length; i ++) {
+            int start = shifts[i][0], end = shifts[i][1], amount = shifts[i][2] == 1 ? 1 : -1;
+            diff[start] += amount;
+            diff[end + 1] -= amount;
+        }
+        
+        int cur = 0;
+        int[] shiftArr = new int[n];
+        for (int i = 0; i < n; i ++) {
+            cur += diff[i];
+            shiftArr[i] = cur;
+        }
+        
+        for (int i = 0; i < n; i ++) {
+            if (shiftArr[i] > 0) {
+                shiftArr[i] = shiftArr[i] % 26;
+            } else if (shiftArr[i] < 0) {
+                shiftArr[i] = (shiftArr[i] % 26) + 26;
+            }
+        }
+        
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i ++) {
+            arr[i] = s.charAt(i) - 'a';
+        }
+        for (int i = 0; i < n; i ++) {
+            arr[i] = (arr[i] + shiftArr[i]) % 26;
+        }
+        char[] chars = new char[n];
+        for (int i = 0; i < n; i ++) {
+            chars[i] = (char)('a' + arr[i]);
+        }
+        
+        return new String(chars);
+    }
+}
