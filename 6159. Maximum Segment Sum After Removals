@@ -1,0 +1,54 @@
+class Solution {
+    long[] bit;
+    int n;
+    Map<int[], Integer> map = new HashMap<>();
+    public long[] maximumSegmentSum(int[] nums, int[] removeQueries) {
+        n = nums.length;
+        bit = new long[n + 1];
+        for (int i = 0; i < n; i ++) {
+            update(i, nums[i]);
+        }
+        long[] res = new long[n];
+        for (int i = 0; i < removeQueries.length; i ++) {
+            update(removeQueries[i], -nums[removeQueries[i]]);
+            int[] newArr = Arrays.copyOfRange(removeQueries, 0, i + 1);
+            Arrays.sort(newArr);
+         
+            long max = 0;
+            max = Math.max(max, getSum(newArr[0]));
+            for (int k = 0; k < newArr.length - 1; k ++) {
+                int start = newArr[k];
+                int end = newArr[k + 1] - 1;
+                if (start < end) {
+                    max = Math.max(max, getSum(end) - getSum(start));
+                }
+            }
+            if (newArr[newArr.length - 1] != n - 1) {
+                max = Math.max(max, getSum(n - 1) - getSum(newArr[newArr.length - 1]));
+            }
+            res[i] = max;
+        }
+        
+        return res;
+        
+    }
+    
+    long getSum(int p) {
+        int idx = p + 1;
+        long ans = 0;
+        while (idx > 0) {
+            ans += bit[idx];
+            idx -= (idx & (-idx));
+        }
+        return ans;
+    }
+    
+    void update(int u, int v) {
+        int idx = u + 1;
+        while(idx <= n) {
+            bit[idx] += v;
+            idx += (idx & (-idx));
+        }
+        
+    }
+}
