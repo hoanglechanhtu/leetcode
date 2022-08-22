@@ -1,0 +1,52 @@
+class Solution {
+    public int minCost(int maxTime, int[][] edges, int[] passingFees) {
+        Map<Integer, List<int[]>> map = new HashMap<>();
+        int n = passingFees.length;
+        for (int i = 0; i < edges.length; i ++) {
+            int from = edges[i][0], to = edges[i][1], time = edges[i][2];
+            map.putIfAbsent(from, new ArrayList<>());
+            map.putIfAbsent(to, new ArrayList<>());
+            map.get(from).add(new int[]{to, time});
+            map.get(to).add(new int[]{from, time});
+        }
+        
+        int[] dArr = new int[n];
+        int[] timeArr = new int[n];
+        Arrays.fill(dArr, Integer.MAX_VALUE);
+        Arrays.fill(timeArr, Integer.MAX_VALUE);
+        
+        //fee, time, vertex
+        Queue<int[]> heap = new PriorityQueue<>((a, b) -> a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);
+        heap.offer(new int[]{passingFees[0], 0, 0});
+        dArr[0] = 0;
+        timeArr[0] = 0;
+    
+        while(!heap.isEmpty()) {
+            int[] curs =  heap.poll();
+            int cur = curs[2], fee = curs[0], time = curs[1];
+            
+            if (map.get(cur) == null) {
+                continue;
+            }
+            
+            for(int[] nexts : map.get(cur)) {
+                int next = nexts[0], nextTime = nexts[1], nextFee = passingFees[next];
+                
+                if (time + nextTime <= maxTime) {
+                    if (fee + nextFee < dArr[next]) {
+                        dArr[next] = fee + nextFee;
+                        timeArr[next] = time + nextTime;
+                        heap.offer(new int[]{dArr[next], time + nextTime, next});
+                    }
+                    
+                    if (time + nextTime < timeArr[next]) {
+                        timeArr[next] = time + nextTime;
+                        heap.offer(new int[]{fee + nextFee, time + nextTime, next});
+                    }
+                }
+            }
+        }
+        
+        return dArr[n - 1] == Integer.MAX_VALUE ? -1 : dArr[n - 1];
+    }
+}
