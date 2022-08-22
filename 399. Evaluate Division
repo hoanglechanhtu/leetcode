@@ -1,0 +1,57 @@
+class Solution {
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        Map<String, Map<String, Double>> map = new HashMap<>();
+        for (int i = 0; i < equations.size(); i ++) {
+            String a = equations.get(i).get(0);
+            String b = equations.get(i).get(1);
+            Double value = values[i];
+            map.putIfAbsent(a, new HashMap<>());
+            map.putIfAbsent(b, new HashMap<>());
+            map.get(a).put(b, value);
+            map.get(b).put(a, 1/value);
+        }
+        double[] res = new double[queries.size()];
+        Arrays.fill(res, -1);
+        int k = 0;
+        for (List<String> query : queries) {
+            String a = query.get(0);
+            String b = query.get(1);
+            if (a == b) {
+                res[k] = 1;
+            } else if (map.containsKey(a) && map.containsKey(b)) {
+                Double cur = find(a, b, map, new HashSet<>());
+                if (cur != null) {
+                    res[k] = cur;
+                }
+            }
+
+            k ++;
+        }
+        
+        return res;
+    }
+    
+    Double find(String a, String b, Map<String, Map<String, Double>> map, Set<String> set) {
+        if (set.contains(a)) {
+            return null;
+        }
+        set.add(a);
+        if (map.get(a) == null) {
+            return null;
+        }
+        Map<String, Double> curMap = map.get(a);
+        if (curMap.get(b) != null) {
+            return map.get(a).get(b);
+        }
+        for(String key: curMap.keySet()) {
+            Double value = curMap.get(key);
+            Double next = find(key, b, map, set);
+            if (next != null) {
+                set.remove(key);
+                return next * value;
+            } 
+        }
+        set.remove(a);
+        return null;
+    }
+}
