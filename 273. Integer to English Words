@@ -1,0 +1,162 @@
+class Solution {
+    class Res {
+        int level;
+        String word;
+        Res(String word, int level) {
+            this.word = word;
+            this.level = level;
+        }
+    }
+    public String numberToWords(int num) {
+        if (num == 0) {
+            return "Zero";
+        }
+        String numString = Integer.toString(num);
+        return helper(numString, 0).word;
+    }
+    
+    Res helper(String num, int level) {
+        if (num.length() < 4) {
+            return new Res(get(num), 0);
+        } else {
+            int remain = num.length() % 3;
+            if (remain == 0) {
+                remain = 3;
+            }
+            StringBuilder builder = new StringBuilder();
+            String first = num.substring(0, remain);
+            String firstWord = get(first);
+            append(builder, firstWord);
+            
+            Res next = helper(num.substring(remain), level);
+            if (builder.length() != 0) {
+                append(builder, getLevel(next.level + 1));
+            }
+            append(builder, next.word);            
+            return new Res(builder.toString(), next.level + 1);
+        }
+    }
+    
+    String get(String numString) {
+        if (numString == "") return "";
+        StringBuilder builder = new StringBuilder();
+        //num < 1000
+        int num = Integer.valueOf(numString);
+        int a = num / 100;
+        num = num % 100;
+        int b = num / 10;
+        num = num % 10;
+        
+        if (a > 0) {
+            append(builder, getSingle(a));
+            append(builder, "Hundred");
+        }
+        if (b > 0) {
+            if (b == 1) {
+                append(builder, getSingle(b * 10 + num));
+            } else {
+                append(builder, getSingle(b * 10));
+                if (num != 0) {
+                    append(builder, getSingle(num));
+            }   }
+        } else {
+            if (num != 0 ) {
+                append(builder, getSingle(num));
+            }
+        }
+        
+        return  builder.toString();
+    }
+    
+    void append(StringBuilder builder, String s) {
+        if (s == "") {
+            return;
+        }
+        if (builder.length() == 0 || builder.charAt(builder.length() - 1) == ' ') {
+            builder.append(s);
+        } else {
+            builder.append(" " + s);
+        } 
+        
+    }
+    String getLevel(int level) {
+        if (level == 0) {
+            return "";
+        } 
+        if (level == 1) {
+            return "Thousand";
+        }
+        if (level == 2) {
+            return "Million";
+        }
+        if (level == 3) {
+            return "Billion";
+        }
+        
+        return "";
+    }
+    
+    String getSingle(int num) {
+        switch (num) {
+            case 0:
+                return "Zero";
+            case 1:
+                return "One";
+            case 2:
+                return "Two";
+            case 3:
+                return "Three";
+            case 4: 
+                return "Four";
+            case 5: 
+                return "Five";
+            case 6:
+                return "Six";
+            case 7: 
+                return "Seven";
+            case 8:
+                return "Eight";
+            case 9:
+                return "Nine";
+            case 10:
+                return "Ten";
+            case 11:
+                return "Eleven";
+            case 12:
+                return "Twelve";
+            case 13:
+                return "Thirteen";
+            case 14:
+                return "Fourteen";
+            case 15:
+                return "Fifteen";
+            case 16:
+                return "Sixteen";
+            case 17: 
+                return "Seventeen";
+            case 18:
+                return "Eighteen";
+            case 19:
+                return "Nineteen";
+            case 20:
+                return "Twenty";
+            case 30:
+                return "Thirty";
+            case 40:
+                return "Forty";
+            case 50:
+                return "Fifty";
+            case 60:
+                return "Sixty";
+            case 70:
+                return "Seventy";
+            case 80:
+                return "Eighty";
+            case 90:
+                return "Ninety";
+            default:
+                return "";
+        }
+    }
+    
+}
