@@ -1,0 +1,20 @@
+class Solution {
+    public String removeDigit(String number, char digit) {
+        int n = number.length();
+        int index = -1;
+        for (int i = n - 1; i >= 0; i--) {
+            if (number.charAt(i) != digit) {
+                continue;
+            }
+            
+            if (index == -1) {
+                index = i;
+            } else {
+                if (Integer.valueOf(number.charAt(i)) < Integer.valueOf(number.charAt(i + 1))) {
+                    index = i;
+                }
+            }
+        }
+        return number.substring(0, index) + number.substring(index + 1);
+    }
+}
