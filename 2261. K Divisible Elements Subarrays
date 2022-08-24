@@ -1,0 +1,32 @@
+class Solution {
+    public int countDistinct(int[] nums, int k, int p) {
+        int n = nums.length;
+        Set<String> set = new HashSet<>();
+        int left = 0;
+        int nDivisible = 0;
+        int res = 0;
+        for (int right = 0; right < n; right ++) {
+            if (nums[right] % p == 0) {
+                nDivisible ++;
+            }
+            
+            while(nDivisible > k) {
+                if (nums[left] % p == 0) {
+                    nDivisible --;
+                }
+                left ++;
+            }
+            
+            String key = "";
+            for (int i = right; i >= left; i --) {
+                key = key + "-" + nums[i];
+                if (!set.contains(key)) {
+                    res ++;
+                    set.add(key);
+                }
+            }
+        }
+        
+        return res;
+    }
+}
