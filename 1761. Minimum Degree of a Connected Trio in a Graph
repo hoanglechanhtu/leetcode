@@ -1,0 +1,28 @@
+class Solution {
+    public int minTrioDegree(int n, int[][] edges) {
+        int[][] graph = new int[n + 1][n + 1];
+        int[] counts = new int[n + 1];
+        for (int i = 0; i < edges.length; i ++) {
+            int u = edges[i][0], v = edges[i][1];
+            graph[u][v] = 1;
+            graph[v][u] = 1;
+            counts[u] ++;
+            counts[v] ++;
+        }
+        int min = Integer.MAX_VALUE;
+        for (int i = 1; i <= n; i ++) {
+            for (int j = i + 1; j <= n; j ++) {
+                if (graph[i][j] == 1) {
+                    for (int t = j + 1; t <= n; t ++) {
+                        if (graph[i][t] == 1 && graph[j][t] == 1) {
+                            min = Math.min(min, counts[i] + counts[j] + counts[t] - 6);
+                        }
+                    }
+                }
+                
+            }
+        }
+        
+        return min == Integer.MAX_VALUE ? -1 : min;
+    }
+}
