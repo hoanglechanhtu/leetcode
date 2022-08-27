@@ -1,0 +1,68 @@
+class Solution {
+    public long minimumWeight(int n, int[][] edges, int src1, int src2, int dest) {
+        List<List<int[]>> graph = new ArrayList<>();
+        List<List<int[]>> rGraph = new ArrayList<>();
+        
+        for (int i = 0; i < n; i ++) {
+            graph.add(new ArrayList<>());
+            rGraph.add(new ArrayList<>());
+        }
+        for (int i = 0; i < edges.length; i ++) {
+            int from = edges[i][0], to = edges[i][1], w = edges[i][2];
+            graph.get(from).add(new int[]{to, w});
+            rGraph.get(to).add(new int[]{from, w});
+        }
+        
+        long[] disFromSource1 = new long[n];
+        long[] disFromSource2 = new long[n];
+        long[] disFromDest = new long[n];
+        
+        Arrays.fill(disFromSource1, Long.MAX_VALUE);
+        Arrays.fill(disFromSource2, Long.MAX_VALUE);
+        Arrays.fill(disFromDest, Long.MAX_VALUE);
+        
+        bfs(graph, src1, disFromSource1);
+        bfs(graph, src2, disFromSource2);
+        bfs(rGraph, dest, disFromDest);
+        long min = Long.MAX_VALUE;
+        if (disFromSource1[dest] == Long.MAX_VALUE || disFromSource2[dest] == Long.MAX_VALUE) {
+            return -1;
+        }
+        
+        for (int i = 0; i < n; i ++) {
+            if (disFromSource1[i] == Long.MAX_VALUE || disFromSource2[i] == Long.MAX_VALUE || disFromDest[i] == Long.MAX_VALUE) {
+                continue;
+            }
+            min = Math.min(min, disFromSource1[i] + disFromSource2[i] + disFromDest[i]);
+        }
+        
+        
+        return min == Long.MAX_VALUE ? -1 : min;
+
+    }
+    
+    
+    
+    void bfs(List<List<int[]>> graph, int from, long[] distance) {
+        //Item: node, distance
+        PriorityQueue<long[]> heap = new PriorityQueue<long[]>((a,b) -> Long.compare(a[1], b[1]));
+        distance[from] = 0;
+        heap.offer(new long[]{from, 0});
+        
+        while(!heap.isEmpty()) {
+            long[] cur =  heap.poll();
+            int node = (int)cur[0];
+            long dis = cur[1];
+            if (dis > distance[node]) {
+                continue;
+            }
+            for (int[] nexts : graph.get(node)) {
+                int next = (int)nexts[0], w = nexts[1];
+                if (dis + w < distance[next]) {
+                    distance[next] = dis + w;
+                    heap.offer(new long[]{next, distance[next]});
+                }
+            }
+        }
+    }
+}
