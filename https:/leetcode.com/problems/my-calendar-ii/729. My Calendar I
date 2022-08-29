@@ -1,0 +1,62 @@
+class MyCalendarTwo {
+    List<int[]> singleBook = new ArrayList<>();
+    List<int[]> doubleBook = new ArrayList<>();
+    public MyCalendarTwo() {
+        
+    }
+    
+    public boolean book(int start, int end) {
+        for (int[] cur : doubleBook) {
+            int curStart = cur[0], curEnd = cur[1];
+            if (start < curEnd && curStart < end) {
+                return false;
+            }
+        }
+        for (int[] cur : singleBook) {
+            int curStart = cur[0], curEnd = cur[1];
+            if (start < curEnd && curStart < end) {
+                doubleBook.add(new int[]{Math.max(start, curStart), Math.min(end, curEnd)});
+            }  
+        }
+        
+        singleBook.add(new int[]{start, end});
+        
+        return true;
+    }
+}
+
+/**
+ * Your MyCalendarTwo object will be instantiated and called as such:
+ * MyCalendarTwo obj = new MyCalendarTwo();
+ * boolean param_1 = obj.book(start,end);
+ */
+ 
+ 
+ class MyCalendarTwo {
+    TreeMap<Integer, Integer> map = new TreeMap<>();
+    public MyCalendarTwo() {
+        
+    }
+    
+    public boolean book(int start, int end) {
+      
+        map.put(start, map.getOrDefault(start, 0) + 1);
+        map.put(end, map.getOrDefault(end, 0) -1);
+         int sum = 0;
+        for (int d: map.values()) {
+            sum += d;
+            if (sum >= 3) {
+                map.put(start, map.getOrDefault(start, 0) - 1);
+                map.put(end, map.getOrDefault(end, 0) + 1);
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+/**
+ * Your MyCalendarTwo object will be instantiated and called as such:
+ * MyCalendarTwo obj = new MyCalendarTwo();
+ * boolean param_1 = obj.book(start,end);
+ */
