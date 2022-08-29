@@ -1,0 +1,25 @@
+class MyCalendar {
+    TreeMap<Integer, Integer> map = new TreeMap<>();
+    public MyCalendar() {
+        
+    }
+    
+    public boolean book(int start, int end) {
+        Integer prev = map.floorKey(start);
+        Integer next = map.ceilingKey(start);
+        if ((prev == null || map.get(prev) <= start) &&
+           (next == null || next >= end)
+           ) {
+            
+            map.put(start, end);
+            return true;
+        }
+        return false;
+    }
+}
+
+/**
+ * Your MyCalendarTwo object will be instantiated and called as such:
+ * MyCalendarTwo obj = new MyCalendarTwo();
+ * boolean param_1 = obj.book(start,end);
+ */
