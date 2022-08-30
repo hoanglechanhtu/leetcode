@@ -1,0 +1,68 @@
+class Solution {
+    public int[] countRectangles(int[][] rectangles, int[][] points) {
+        int nPoints = points.length;
+        int nRec = rectangles.length;
+        int[] res = new int[nPoints];
+        for (int i = 0; i < nPoints; i ++) {
+            int total = 0;
+            for (int j = 0; j < nRec; j ++) {
+                if (isInside(rectangles[j], points[i])) {
+                    total ++;
+                }
+            }
+            res[i] = total;
+        }
+        
+        return res;
+    }
+    
+    boolean isInside(int[] res, int[] point) {
+        if (point[0] <= res[0] && point[1] <= res[1]) {
+            return true;
+        }
+        return false;
+    }
+}
+
+
+class Solution {
+    TreeMap<Integer, Integer>[] mapArr = new TreeMap[101];
+    public int[] countRectangles(int[][] rectangles, int[][] points) {
+        int nRec = rectangles.length;
+        int nPoint = points.length;
+        Arrays.sort(rectangles, (a, b) -> a[0] - b[0]);
+        for (int i = 0; i < 101; i ++) {
+            mapArr[i] = new TreeMap<Integer, Integer>();
+            mapArr[i].put(0, 0);
+        }
+        
+        for (int i = 0; i < nRec; i ++) {
+            int[] cur = rectangles[i];
+            int l = cur[0], h = cur[1];
+            TreeMap<Integer, Integer> map = mapArr[h];
+            int value = map.floorEntry(l).getValue();
+
+            map.put(l, value + 1);
+        }
+        
+        int[] res = new int[nPoint];
+        for (int i = 0; i < nPoint; i ++) {
+            int total = 0;
+            int[] cur = points[i];
+            int x = cur[0], y = cur[1];
+            for (int j = 1; j < 101; j ++) {
+                if (j >= y) {
+                    TreeMap<Integer, Integer> map = mapArr[j];
+                    if (map.isEmpty()) {
+                        continue;
+                    }
+                    int xTotal = map.lastEntry().getValue();
+                    int preTotal = map.lowerEntry(x).getValue();
+                    total += xTotal - preTotal;
+                }
+            }
+            res[i] = total;
+        }
+        return res;
+    }
+}
