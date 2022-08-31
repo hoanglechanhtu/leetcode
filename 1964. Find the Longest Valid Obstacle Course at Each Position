@@ -1,0 +1,79 @@
+class Solution {
+    public int[] longestObstacleCourseAtEachPosition(int[] obstacles) {
+        int n = obstacles.length;
+        int[] memo = new int[n];
+        for (int i = 0; i < n; i ++) {
+            int cur = 1;
+            for (int j = 0; j < i; j ++) {
+                if (obstacles[j] <= obstacles[i]) {
+                    cur = Math.max(cur, memo[j] + 1);
+                }
+            }
+            memo[i] = cur;
+        }
+        
+        return memo;
+    }
+}
+
+
+class Solution {
+    public int[] longestObstacleCourseAtEachPosition(int[] obstacles) {
+        int n = obstacles.length;
+        int[] dp = new int[n  + 1];
+        int[] res = new int[n];
+        Arrays.fill(dp, -1);
+        int maxSize = 0;
+        for (int i = 0; i < n; i ++) {
+            int left = 0, right = maxSize;
+            while(left < right) {
+                int middle = left + (right - left + 1)/2;
+                if (dp[middle] > obstacles[i]) {
+                    right = middle - 1;
+                } else {
+                    left = middle;
+                }
+            }
+            res[i] = left + 1;
+            if (obstacles[i] < dp[left + 1] || dp[left + 1] == -1) {
+                dp[left + 1] = obstacles[i];
+            }
+            maxSize = Math.max(maxSize, left + 1);
+        }
+        
+        return res;
+    }
+}
+
+class Solution {
+    int[] bit = new int[10000001];
+    public int[] longestObstacleCourseAtEachPosition(int[] obstacles) {
+        int n = obstacles.length;
+        int[] res = new int[n];
+        
+        for (int i = 0; i < n; i ++) {
+            int cur = query(obstacles[i]) + 1;
+            res[i] = cur;
+            update(obstacles[i], cur);
+        }
+        
+        return res;
+    }
+    
+    void update(int idx, int h) {
+        while(idx <= 10000000) {
+            bit[idx] = Math.max(bit[idx], h);
+            idx += (idx &(-idx));
+        }
+    }
+    
+    int query(int idx) {
+        int max = 0;
+        while(idx > 0) {
+            max = Math.max(bit[idx], max);
+            idx -= (idx & (-idx));
+        }
+        
+        return max;
+    }
+}
