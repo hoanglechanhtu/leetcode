@@ -1,0 +1,82 @@
+class Solution {
+    public List<List<Integer>> getSkyline(int[][] buildings) {
+        int n = buildings.length;
+        SortedSet<Integer> set = new TreeSet<>();
+        for (int i = 0; i < n; i ++) {
+            int left = buildings[i][0], right = buildings[i][1];
+            set.add(left);
+            set.add(right);
+        }
+        
+        List<Integer> edges = new ArrayList<>(set);
+        Map<Integer, Integer> edgesToIndex = new HashMap<>();
+        for (int i = 0; i < edges.size(); i ++) {
+            edgesToIndex.put(edges.get(i), i);
+        }
+        int[] heights = new int[edges.size()];
+        
+        for (int i = 0; i < n; i ++) {
+            int left = buildings[i][0], right = buildings[i][1], height = buildings[i][2];
+            
+            int leftIndex = edgesToIndex.get(left);
+            int rightIndex = edgesToIndex.get(right);
+            for (int j = leftIndex; j < rightIndex; j ++) {
+                heights[j] = Math.max(heights[j], height);
+            }
+        }
+        
+        List<List<Integer>> res = new ArrayList<>();
+        int pre = 0;
+        for (int i = 0; i < edges.size(); i ++) {
+            if (pre != heights[i]) {
+                res.add(Arrays.asList(edges.get(i), heights[i]));
+                pre = heights[i];
+            }
+        }
+        
+        return res;
+    }
+}
+
+
+
+
+class Solution {
+    public List<List<Integer>> getSkyline(int[][] buildings) {
+        int n = buildings.length;
+        
+        //edges Pos and its buldings index
+        List<int[]> edges = new ArrayList<>();
+        for (int i = 0; i < n; i ++) {
+            edges.add(new int[]{buildings[i][0], i});
+            edges.add(new int[]{buildings[i][1], i});
+        }
+        
+        Collections.sort(edges, (a, b) -> a[0] - b[0]);
+        
+        //height and its right pos
+        PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> (b[0] - a[0]));
+        List<List<Integer>> res = new ArrayList<>();
+        int idx = 0;
+        while(idx < edges.size()) {
+            int curX = edges.get(idx)[0];
+            
+            while(idx < edges.size() &&  edges.get(idx)[0] == curX) {
+                int bIdx = edges.get(idx)[1];
+                heap.add(new int[]{buildings[bIdx][2], buildings[bIdx][1]});
+                idx ++;
+            }
+            
+            while (!heap.isEmpty() && heap.peek()[1] <= curX) {
+                heap.poll();
+            }
+            
+            int curHeight = heap.isEmpty() ? 0 : heap.peek()[0];
+            
+            if (res.isEmpty() || res.get(res.size() - 1).get(1) != curHeight) {
+                res.add(Arrays.asList(curX, curHeight));
+            }
+        }
+        return res;
+    }
+}
