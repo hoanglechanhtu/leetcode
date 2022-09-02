@@ -1,0 +1,51 @@
+class Solution {
+    int[][] dirs = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    public int orangesRotting(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        
+        Queue<int[]> queue = new ArrayDeque<>();
+        boolean haveFresh = false;
+        for (int i = 0; i < m; i ++) {
+            for (int j = 0; j < n; j ++) {
+                if (grid[i][j] == 2) {
+                    queue.offer(new int[]{i, j});
+                    grid[i][j] = 0;
+                }
+                if (grid[i][j] == 1) {
+                    haveFresh = true;
+                }
+            }
+        }
+        int time = 0;
+        if (haveFresh == false) {
+            return 0;
+        }
+
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i ++) {
+                int[] cur = queue.poll();
+                int x = cur[0], y = cur[1];
+                for (int j = 0; j < 4; j ++) {
+                    int[] dir = dirs[j];
+                    int nX = x + dir[0], nY = y + dir[1];
+                    if (nX >= 0 && nY >= 0 && nX < m && nY < n && grid[nX][nY] == 1) {
+                        queue.offer(new int[]{nX, nY});
+                        grid[nX][nY] = 0;
+                    }
+                }
+            }
+            time ++;
+        }
+        
+        for (int i = 0; i < m; i ++) {
+            for (int j = 0; j < n; j ++) {
+                if (grid[i][j] == 1) {
+                    return -1;
+                }
+            }
+        }
+        return time - 1;
+    }
+}
